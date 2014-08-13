@@ -1,0 +1,16 @@
+{
+    "name": "flex/rest-client",
+    "description": "Rest Client",
+    "license": "proprietary",
+    "autoload": {
+        "psr-0": {
+            "Flex\\RestClient\\": "lib/"
+        }
+    },
+    "require": {
+        "php": ">=5.3"
+    },
+    "require-dev": {
+        "atoum/atoum": "dev-master"
+    }
+}
