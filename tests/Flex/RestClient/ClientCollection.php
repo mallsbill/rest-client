@@ -78,6 +78,9 @@ Class ClientCollection extends atoum\test {
 		$this->object($ResponseCollection[0])->isInstanceOf('\\Flex\RestClient\\Response');
 		$this->object($ResponseCollection['comments'])->isInstanceOf('\\Flex\RestClient\\Response');
 		$this->object($ResponseCollection['users'])->isInstanceOf('\\Flex\RestClient\\Response');
+		$this->boolean($ResponseCollection[0]->isSuccessful())->isTrue();
+		$this->boolean($ResponseCollection['comments']->isSuccessful())->isTrue();
+		$this->boolean($ResponseCollection['users']->isSuccessful())->isTrue();
 
 	}
 
