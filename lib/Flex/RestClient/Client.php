@@ -16,32 +16,29 @@ Class Client
 	protected $fh;
 
 	protected $url;
-	protected $verb;
+	protected $method;
 	protected $requestBody;
 	protected $requestLength = 0;
 	protected $contentType;
 	protected $username;
 	protected $password;
 	protected $acceptType;
-	protected $responseBody = null;
-	protected $responseInfo = null;
-	protected $responseError;
 	protected $filepath;
 	protected $timeout;
 
 	/**
 	 * Contruct RestClient
 	 * @param string $url url to call
-	 * @param string $verb http method
+	 * @param string $method http method
 	 * @param various $requestBody array of parameter or string to send
 	 * @param string $filepath file to send
 	 * @param int $timeout define curl timeout
 	 */
-	public function __construct ($url = null, $verb = 'GET', $requestBody = null, $filepath = null, $timeout = 20) {
+	public function __construct ($url = null, $method = Method::GET, $requestBody = null, $filepath = null, $timeout = 20) {
 		$this->url				= $url;
-		$this->verb				= $verb;
+		$this->method				= $method;
 		$this->requestBody		= $requestBody;
-		$this->acceptType		= 'application/json';
+		$this->acceptType		= MineType::JSON;
 		$this->filepath			= $filepath;
 		$this->timeout			= $timeout;
 	}
@@ -49,7 +46,7 @@ Class Client
 	public function flush () {
 		$this->requestBody		= null;
 		$this->requestLength	= 0;
-		$this->verb				= 'GET';
+		$this->method				= Method::GET;
 		$this->responseBody		= null;
 		$this->responseInfo		= null;
 	}
@@ -63,22 +60,22 @@ Class Client
 
 		$this->buildPostBody();
 
-		switch (strtoupper($this->verb))
+		switch (strtoupper($this->method))
 		{
-			case 'GET':
+			case Method::GET:
 				$this->initGet();
 				break;
-			case 'POST':
+			case Method::POST:
 				$this->initPost();
 				break;
-			case 'PUT':
+			case Method::PUT:
 				$this->initPut();
 				break;
-			case 'DELETE':
+			case Method::DELETE:
 				$this->initDelete();
 				break;
 			default:
-				throw new InvalidArgumentException('Current verb (' . $this->verb . ') is an invalid REST verb.');
+				throw new InvalidArgumentException('Current verb (' . $this->method . ') is an invalid REST method.');
 		}
 
 		$this->setCurlOpts();
@@ -87,32 +84,20 @@ Class Client
 
 	/**
 	 * Execute the request
-	 * @throws InvalidArgumentException
+	 * Return Flex\RestClient\Response
 	 */
 	public function execute () {
 
-		try
-		{
-			$this->init();
-			$this->doExecute();
-		}
-		catch (InvalidArgumentException $e)
-		{
-			curl_close($this->ch);
-			throw $e;
-		}
-		catch (Exception $e)
-		{
-			curl_close($this->ch);
-			throw $e;
-		}
+		$this->init();
+		return new Response(curl_exec($this->ch),
+							curl_getinfo($this->ch),
+							curl_error($this->ch));
 
 	}
 
 	/**
 	 * Transform array of parameters to string
 	 * @param array $data
-	 * @throws InvalidArgumentException
 	 */
 	public function buildPostBody ($data = null) {
 		$data = ($data !== null) ? $data : $this->requestBody;
@@ -139,7 +124,7 @@ Class Client
 	protected function initPost () {
 
 		curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
-		curl_setopt($this->ch, CURLOPT_POST, 1);
+		curl_setopt($this->ch, CURLOPT_POST, true);
 
 	}
 
@@ -168,24 +153,20 @@ Class Client
 
 		if( !empty($this->requestBody) ){
 			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
-			curl_setopt($this->ch, CURLOPT_POST, 1);
+			curl_setopt($this->ch, CURLOPT_POST, true);
 		}
 
-	}
-
-	/**
-	 * Execute the request and set response values
-	 */
-	protected function doExecute () {
-		$this->responseBody = curl_exec($this->ch);
-		$this->responseInfo	= curl_getinfo($this->ch);
-		$this->responseError = curl_error($this->ch);
 	}
 
 	/**
 	 * Define common curl options
 	 */
 	protected function setCurlOpts () {
+
+		if(empty($this->url)){
+			throw new LogicException('Url must be set');
+		}
+
 		curl_setopt($this->ch, CURLOPT_TIMEOUT, $this->timeout);
 		curl_setopt($this->ch, CURLOPT_URL, $this->url);
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
@@ -223,119 +204,67 @@ Class Client
 	}
 
 	/**
-	 * Return curl ressource, work only from RestMultiClient
+	 * Return curl ressource, work only from MultiClient
 	 * @return ressource Curl
 	 * @throws LogicException
 	 */
 	public function getCurlHandler(){
-		$trace=debug_backtrace(false);
-		if($trace[1]['class'] != 'Core\Lib\Contact\RestMultiClient'){
-			throw new LogicException('getCurlHandler can only be called by Core\Lib\Contact\RestMultiClient');
-		}
-
+		$this->checkCurlHandler();
 		return $this->ch;
 	}
 
-	public function getContentType () {
-		return $this->acceptType;
+	public function getContentType() {
+		return $this->contentType;
 	}
 
-	public function setContentType ($contentType) {
+	public function setContentType($contentType) {
 		$this->contentType = $contentType;
 	}
 
-
-	public function getAcceptType () {
+	public function getAcceptType() {
 		return $this->acceptType;
 	}
 
-	public function setAcceptType ($acceptType) {
+	public function setAcceptType($acceptType) {
 		$this->acceptType = $acceptType;
 	}
 
-	public function getPassword () {
+	public function getPassword() {
 		return $this->password;
 	}
 
-	public function setPassword ($password) {
+	public function setPassword($password) {
 		$this->password = $password;
 	}
 
-	/**
-	 * set response body from curl ressource, used from RestMultiClient
-	 */
-	public function setResponseBody() {
-		$this->checkCurlHandler();
-		$this->responseBody = curl_multi_getcontent($this->ch);
-	}
-
-	public function getResponseBody () {
-		return $this->responseBody;
-	}
-
-	public function getResponseJson ( $assoc = true ) {
-		return json_decode( $this->responseBody, $assoc);
-	}
-
-	/**
-	 * set response info from curl ressource, used from RestMultiClient
-	 */
-	public function setResponseInfo() {
-		$this->checkCurlHandler();
-		$this->responseInfo = curl_getinfo($this->ch);
-	}
-
-	public function getResponseInfo () {
-		return $this->responseInfo;
-	}
-
-	/**
-	 * set response error from curl ressource, used from RestMultiClient
-	 */
-	public function setResponseError() {
-		$this->checkCurlHandler();
-		$this->responseError = curl_error($this->ch);
-	}
-
-	public function getResponseError ()
-	{
-		return $this->responseError;
-	}
-
-	public function getUrl ()
-	{
+	public function getUrl() {
 		return $this->url;
 	}
 
-	public function setUrl ($url)
-	{
+	public function setUrl($url) {
 		$this->url = $url;
 	}
 
-	public function getUsername ()
-	{
+	public function getUsername() {
 		return $this->username;
 	}
 
-	public function setUsername ($username)
-	{
+	public function setUsername($username) {
 		$this->username = $username;
 	}
 
-	public function getVerb ()
-	{
-		return $this->verb;
+	public function getMethod() {
+		return $this->method;
 	}
 
-	public function setVerb ($verb)
-	{
-		$this->verb = $verb;
+	public function setMethod($method) {
+		$this->method = $method;
 	}
 
 	/**
 	 * Close curl handler and file handler
 	 */
-	public function __destruct(){
+	public function __destruct() {
 		
 		if( !empty($this->fh) ){
 			fclose($this->fh);
