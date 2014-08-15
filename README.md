@@ -77,14 +77,24 @@ Requètes en parallèle
 	use Flex\RestClient;
 
 	$ClientCollection = new RestClient\ClientCollection();
-	$ClientCollection->set('res1', RestClient\Client('http://monapi/ressources/1');
-	$ClientCollection->set('res2', RestClient\Client('http://monapi/ressources/2');
-	$ClientCollection->set('res42', RestClient\Client('http://monapi/ressources/42');
+	// ajoute la suite de la collection
+	$ClientCollection->add(new RestClient\Client('http://monapi/ressources/1');
+	// ajoute en définissant la clé
+	$ClientCollection->set('res2', new RestClient\Client('http://monapi/ressources/2');
+	// ajoute en définissant la clé, utilise offsetSet d'ArrayAccess
+	$ClientCollection['res42'] = new RestClient\Client('http://monapi/ressources/42');
 
+	// on exécute les requètes
 	$ResponseCollection = $ClientCollection->execute();
 
-	$body42 = $ResponseCollection['res42']->getBody();
+	// on récupère le retour de la requète ajouté avec add (index 0)
+	$body = $ResponseCollection->get(0)->getBody();
+	// on récupère le retour de la requète res2 grâce à offsetGet d'ArrayAccess
+	$body2 = $ResponseCollection['res2']->getBody();
+	// on récupère le retour de la requète res42
+	$body = $ResponseCollection->get('res42')->getBody();
 
+	// on peut aussi boucler sur la collection
 	foreach($ResponseCollection as $Response){
 		if($Response->isSuccessful()){
 			// do something
