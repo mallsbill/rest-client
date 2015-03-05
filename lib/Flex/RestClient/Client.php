@@ -265,7 +265,7 @@ Class Client
 	}
 
 	public function setTimeout($timeout) {
-		if(is_int($sslVerify)) {
+		if(is_int($timeout)) {
 			throw new \InvalidArgumentException('timeout integer expected');
 		}
 		$this->timeout = $timeout;
