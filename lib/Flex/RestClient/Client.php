@@ -19,36 +19,26 @@ Class Client
 	protected $method;
 	protected $requestBody;
 	protected $requestLength = 0;
-	protected $contentType;
+
+	protected $headers = array();
+	protected $sslVerify = false;
+
 	protected $username;
 	protected $password;
-	protected $acceptType;
-	protected $filepath;
-	protected $timeout;
+	
+	protected $timeout = 5;
 
 	/**
 	 * Contruct RestClient
 	 * @param string $url url to call
 	 * @param string $method http method
 	 * @param various $requestBody array of parameter or string to send
-	 * @param string $filepath file to send
-	 * @param int $timeout define curl timeout
 	 */
-	public function __construct ($url = null, $method = Method::GET, $requestBody = null, $filepath = null, $timeout = 20) {
+	public function __construct($url = null, $method = Method::GET, $requestBody = null) {
 		$this->url				= $url;
-		$this->method				= $method;
+		$this->method			= $method;
 		$this->requestBody		= $requestBody;
-		$this->acceptType		= MineType::JSON;
-		$this->filepath			= $filepath;
-		$this->timeout			= $timeout;
-	}
-
-	public function flush () {
-		$this->requestBody		= null;
-		$this->requestLength	= 0;
-		$this->method				= Method::GET;
-		$this->responseBody		= null;
-		$this->responseInfo		= null;
+		$this->headers['Accept']= MineType::JSON;
 	}
 
 	/**
@@ -78,15 +68,16 @@ Class Client
 				throw new InvalidArgumentException('Current verb (' . $this->method . ') is an invalid REST method.');
 		}
 
-		$this->setCurlOpts();
-		$this->setAuth();
+		$this->initCurlOpts();
+		$this->initHeaders();
+		$this->initAuth();
 	}
 
 	/**
 	 * Execute the request
 	 * Return Flex\RestClient\Response
 	 */
-	public function execute () {
+	public function execute() {
 
 		$this->init();
 		return new Response(curl_exec($this->ch),
@@ -99,7 +90,7 @@ Class Client
 	 * Transform array of parameters to string
 	 * @param array $data
 	 */
-	public function buildPostBody ($data = null) {
+	public function buildPostBody($data = null) {
 		$data = ($data !== null) ? $data : $this->requestBody;
 
 		if ( is_array($data) )
@@ -113,7 +104,7 @@ Class Client
 	/**
 	 * Init Get Request
 	 */
-	protected function initGet () {
+	protected function initGet() {
 		if(!empty($this->requestBody))
 			$this->url .= ( strpos($this->url, '?') === false ) ? '?'.$this->requestBody : '&'.$this->requestBody;
 	}
@@ -121,7 +112,7 @@ Class Client
 	/**
 	 * Init Post Request
 	 */
-	protected function initPost () {
+	protected function initPost() {
 
 		curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
 		curl_setopt($this->ch, CURLOPT_POST, true);
@@ -131,7 +122,7 @@ Class Client
 	/**
 	 * Init Put Request
 	 */
-	protected function initPut () {
+	protected function initPut() {
 
 		$this->requestLength = strlen($this->requestBody);
 
@@ -148,7 +139,7 @@ Class Client
 	/**
 	 * Init Delete Request
 	 */
-	protected function initDelete () {
+	protected function initDelete() {
 		curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 
 		if( !empty($this->requestBody) ){
@@ -161,7 +152,7 @@ Class Client
 	/**
 	 * Define common curl options
 	 */
-	protected function setCurlOpts () {
+	protected function initCurlOpts() {
 
 		if(empty($this->url)){
 			throw new LogicException('Url must be set');
@@ -170,23 +161,25 @@ Class Client
 		curl_setopt($this->ch, CURLOPT_TIMEOUT, $this->timeout);
 		curl_setopt($this->ch, CURLOPT_URL, $this->url);
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, $this->sslVerify);
+		curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, $this->sslVerify);
+	}
 
-		$headers = array ('Accept: ' . $this->acceptType);
+	protected function initHeaders() {
 
-		if( !empty($this->contentType) ){
-			$headers[] = 'Content-Type: '.$this->contentType;
+		$headers = array();
+
+		foreach ($this->headers as $name => $value) {
+			$headers[] = $name.': '.$value;
 		}
 
 		curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers );
-
-		curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
-		curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 0);
 	}
 
 	/**
 	 * Set Basic auth curl options
 	 */
-	protected function setAuth () {
+	protected function initAuth() {
 		if ( !empty($this->username) && !empty($this->password) ) {
 			curl_setopt($this->ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($this->ch, CURLOPT_USERPWD, $this->username . ':' . $this->password);
@@ -198,7 +191,7 @@ Class Client
 	 * @throws LogicException
 	 */
 	protected function checkCurlHandler() {
-		if(empty($this->ch)){
+		if( is_resource($this->ch) != 'curl' ){
 			throw new LogicException('Curl handler not initialized');
 		}
 	}
@@ -214,19 +207,21 @@ Class Client
 	}
 
 	public function getContentType() {
-		return $this->contentType;
+		return $this->headers['Content-Type'];
 	}
 
 	public function setContentType($contentType) {
-		$this->contentType = $contentType;
+		$this->headers['Content-Type'] = $contentType;
+		return $this;
 	}
 
 	public function getAcceptType() {
-		return $this->acceptType;
+		return $this->headers['Accept'];
 	}
 
 	public function setAcceptType($acceptType) {
-		$this->acceptType = $acceptType;
+		$this->headers['Accept'] = $acceptType;
+		return $this;
 	}
 
 	public function getPassword() {
@@ -235,6 +230,7 @@ Class Client
 
 	public function setPassword($password) {
 		$this->password = $password;
+		return $this;
 	}
 
 	public function getUrl() {
@@ -243,6 +239,7 @@ Class Client
 
 	public function setUrl($url) {
 		$this->url = $url;
+		return $this;
 	}
 
 	public function getUsername() {
@@ -251,6 +248,7 @@ Class Client
 
 	public function setUsername($username) {
 		$this->username = $username;
+		return $this;
 	}
 
 	public function getMethod() {
@@ -259,6 +257,54 @@ Class Client
 
 	public function setMethod($method) {
 		$this->method = $method;
+		return $this;
+	}
+
+	public function getTimeout() {
+		return $this->timeout;
+	}
+
+	public function setTimeout($timeout) {
+		if(is_int($sslVerify)) {
+			throw new \InvalidArgumentException('timeout integer expected');
+		}
+		$this->timeout = $timeout;
+		return $this;
+	}
+	
+	public function getHeaders() {
+		return $this->headers;
+	}
+
+	public function getHeader($name) {
+		return $this->headers[$name];
+	}
+
+	public function setHeader($name, $value) {
+		$this->headers[$name] = $value;
+		return $this;
+	}
+
+	public function getSslVerify() {
+		return $this->sslVerify;
+	}
+
+	public function setSslVerify($sslVerify) {
+		if(is_bool($sslVerify)) {
+			throw new \InvalidArgumentException('sslVerify boolean expected');
+		}
+		$this->sslVerify = $sslVerify;
+		return $this;
+	}
+
+	public function setRequestBody($requestBody) {
+		$this->requestBody = $requestBody;
+		return $this;
+	}
+
+	public function setRequestLength($requestLength) {
+		$this->requestLength = $requestLength;
+		return $this;
 	}
 
 	/**

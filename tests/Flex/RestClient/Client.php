@@ -10,7 +10,7 @@ use	mageekguy\atoum;
 
 Class Client extends atoum\test {
 
-	public function testClient(){
+	public function testPost() {
 
 		// add new post
 		$body = array(
@@ -29,23 +29,37 @@ nostrum rerum est autem sunt rem eveniet architecto',
 		$this->object($Response)->isInstanceOf('\\Flex\RestClient\\Response');
 		$this->boolean($Response->isSuccessful())->isTrue();
 
-		$res = $Response->getJsonDecode();
+	}
 
-		// get post just created
-		$Client = new TestedClass('http://jsonplaceholder.typicode.com/posts/'.$res->id);
+	public function testGet() {
+
+		$body = array(
+				'title' => 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+				'body' =>
+'quia et suscipit
+suscipit recusandae consequuntur expedita et cum
+reprehenderit molestiae ut ut quas totam
+nostrum rerum est autem sunt rem eveniet architecto',
+				'userId' => 1
+			);
+
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1');
 		$Response = $Client->execute();
+
 		$this->boolean($Response->isSuccessful())->isTrue();
 
 		$res2 = $Response->getJsonDecode();
 
-		$this->integer($res2->id)->isEqualTo($res->id);
+		$this->integer($res2->id)->isEqualTo(1);
 		$this->string($res2->title)->isEqualTo($body['title']);
 		$this->string($res2->body)->isEqualTo($body['body']);
-		$this->string($res2->userId)->isEqualTo($body['userId']);
+		$this->integer($res2->userId)->isEqualTo($body['userId']);
 
+	}
 
+	public function testUpdate() {
 		// update
-		/*$body_update = array(
+		$body_update = array(
 				'title' => 'nesciunt quas odio',
 				'body' =>
 'repudiandae veniam quaerat sunt sed
@@ -55,18 +69,13 @@ est aut tenetur dolor neque',
 				'userId' => 1
 			);
 
-		$Client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1'.$res->id, Method::PUT, $body_update);
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/posts/99', Method::PUT, $body_update);
 		$Response = $Client->execute();
 		$this->boolean($Response->isSuccessful())->isTrue();
+	}
 
-		$res3 = $Response->getJsonDecode();
-
-		$this->integer($res3->id)->isEqualTo($res->id);
-		$this->string($res3->title)->isEqualTo($body_update['title']);
-		$this->string($res3->body)->isEqualTo($body_update['body']);
-		$this->string($res3->userId)->isEqualTo($body_update['userId']);*/
-
-		$Client = new TestedClass('http://jsonplaceholder.typicode.com/posts/'.$res->id, Method::DELETE);
+	public function testDelete() {
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/posts/100', Method::DELETE);
 		$Response = $Client->execute();
 		$this->boolean($Response->isSuccessful())->isTrue();
 
@@ -74,7 +83,7 @@ est aut tenetur dolor neque',
 
 	public function testExceptions(){
 
-		$Client = new TestedClass('http://jsonplaceholder.typicode.com/posts/'.$res->id, 'UNKNOW');
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1', 'UNKNOW');
 		$this->exception(
 			function() use($Client) {
 				$Client->execute();
