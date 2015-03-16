@@ -265,8 +265,8 @@ Class Client
 	}
 
 	public function setTimeout($timeout) {
-		if(is_int($timeout)) {
-			throw new \InvalidArgumentException('timeout integer expected');
+		if(is_numeric($timeout)) {
+			throw new \InvalidArgumentException('timeout numeric expected');
 		}
 		$this->timeout = $timeout;
 		return $this;
