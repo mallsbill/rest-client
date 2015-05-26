@@ -17,7 +17,7 @@ Class ClientCollection extends AbstractCollection {
 	 * @param \Flex\RestClient\Client $client Client
 	 */
 	public function add(Client $client) {
-		$this->collection[] = $client;
+		parent::add($client);
 	}
 
 	/**
@@ -27,7 +27,18 @@ Class ClientCollection extends AbstractCollection {
 	 * @param \Flex\RestClient\Client $client Client
 	 */
 	public function set($key, Client $client) {
-		$this->collection[$key] = $client;
+		parent::set($key, $client);
+	}
+
+	/**
+	 * Gets the element at the specified key/index.
+	 *
+	 * @param string|integer $key The key/index of the element to retrieve.
+	 *
+	 * @return \Flex\RestClient\Client
+	 */
+	public function get($key) {
+		return parent::get($key);
 	}
 
 	/**
