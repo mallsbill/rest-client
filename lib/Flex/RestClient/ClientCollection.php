@@ -43,6 +43,10 @@ Class ClientCollection extends AbstractCollection {
 		}
 	}
 
+	/**
+	 * Execute requests
+	 * @return \Flex\RestClient\ResponseCollection
+	 */
 	public function execute() {
 
 		$this->init();
