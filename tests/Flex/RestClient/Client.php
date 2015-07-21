@@ -157,5 +157,64 @@ est aut tenetur dolor neque',
 		$this->string($Client->getMethod())->isEqualTo(Method::POST);
 	}
 
+	public function testSetTimeout() {
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+		$this->integer($Client->getTimeout())->isEqualTo(5);
+
+		$Client->setTimeout(10);
+
+		$this->integer($Client->getTimeout())->isEqualTo(10);
+
+		$this->exception(
+			function() use($Client) {
+				$Client->setTimeout('pouet');
+			}
+		)->isInstanceOf('\InvalidArgumentException');
+	}
+
+	public function testSetSslVerify() {
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+		$this->boolean($Client->getSslVerify())->isFalse();
+
+		$Client->setSslVerify(true);
+
+		$this->boolean($Client->getSslVerify())->isTrue();
+
+		$this->exception(
+			function() use($Client) {
+				$Client->setSslVerify('true');
+			}
+		)->isInstanceOf('\InvalidArgumentException');
+	}
+
+	public function testSetFollowLocation() {
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+		$this->boolean($Client->getFollowLocation())->isTrue();
+
+		$Client->setFollowLocation(false);
+
+		$this->boolean($Client->getFollowLocation())->isFalse();
+
+		$this->exception(
+			function() use($Client) {
+				$Client->setFollowLocation('true');
+			}
+		)->isInstanceOf('\InvalidArgumentException');
+	}
+
+	public function testHeaders() {
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+
+		$this->string($Client->getHeader('Accept'))->isEqualTo(MineType::JSON);
+		
+		$Client->setHeader('Accept-Language', 'fr-FR');
+		$this->string($Client->getHeader('Accept-Language'))->isEqualTo('fr-FR');
+
+		$Client->setContentType(MineType::TEXT);
+		$this->string($Client->getHeader('Content-Type'))->isEqualTo(MineType::TEXT);
+
+		$this->array($Client->getHeaders())->hasKeys(array('Accept','Accept-Language','Content-Type'));
+		
+	}
 
 }

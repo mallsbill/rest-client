@@ -22,6 +22,7 @@ Class Client
 
 	protected $headers = array();
 	protected $sslVerify = false;
+	protected $followLocation = true;
 
 	protected $username;
 	protected $password;
@@ -163,6 +164,7 @@ Class Client
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, $this->sslVerify);
 		curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, $this->sslVerify);
+		curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, $this->followLocation);
 	}
 
 	protected function initHeaders() {
@@ -290,10 +292,22 @@ Class Client
 	}
 
 	public function setSslVerify($sslVerify) {
-		if(is_bool($sslVerify)) {
+		if(is_bool($sslVerify) === false) {
 			throw new \InvalidArgumentException('sslVerify boolean expected');
 		}
 		$this->sslVerify = $sslVerify;
+		return $this;
+	}
+
+	public function getFollowLocation() {
+		return $this->followLocation;
+	}
+
+	public function setFollowLocation($followLocation) {
+		if(is_bool($followLocation) === false) {
+			throw new \InvalidArgumentException('followLocation boolean expected');
+		}
+		$this->followLocation = $followLocation;
 		return $this;
 	}
 
