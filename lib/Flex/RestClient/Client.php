@@ -23,11 +23,15 @@ Class Client
 	protected $headers = array();
 	protected $sslVerify = false;
 	protected $followLocation = true;
+	protected $cookiePersistence = false;
+	protected $userAgent;
 
 	protected $username;
 	protected $password;
-	
+
 	protected $timeout = 5;
+
+	protected $responseHeaders = array();
 
 	/**
 	 * Contruct RestClient
@@ -83,7 +87,8 @@ Class Client
 		$this->init();
 		return new Response(curl_exec($this->ch),
 							curl_getinfo($this->ch),
-							curl_error($this->ch));
+							curl_error($this->ch),
+							$this->responseHeaders);
 
 	}
 
@@ -98,7 +103,7 @@ Class Client
 		{
 			$data = http_build_query($data, '', '&');
 		}
-		
+
 		$this->requestBody = $data;
 	}
 
@@ -165,6 +170,29 @@ Class Client
 		curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, $this->sslVerify);
 		curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, $this->sslVerify);
 		curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, $this->followLocation);
+		curl_setopt($this->ch, CURLOPT_HEADERFUNCTION, '\Flex\RestClient\Client::responseHeaders');
+
+		if(!empty($this->userAgent)) {
+			curl_setopt($this->ch, CURLOPT_USERAGENT, $this->userAgent);
+		}
+
+		if($this->cookiePersistence) {
+			$cookie_jar = $this->getCookieJar();
+			curl_setopt($this->ch, CURLOPT_COOKIEJAR, $cookie_jar);
+			curl_setopt($this->ch, CURLOPT_COOKIEFILE, $cookie_jar);
+		}
+	}
+
+	public function responseHeaders($ch, $headerLine) {
+		$header = str_replace(array(chr(10),chr(13)), '', $headerLine);
+		if(!empty($header)) {
+			$split = explode(':', $header, 2);
+			if(count($split) == 2)
+				$this->responseHeaders[$split[0]] = $split[1];
+			else
+				$this->responseHeaders[] = $split[0];
+		}
+		return strlen($headerLine);
 	}
 
 	protected function initHeaders() {
@@ -273,7 +301,7 @@ Class Client
 		$this->timeout = $timeout;
 		return $this;
 	}
-	
+
 	public function getHeaders() {
 		return $this->headers;
 	}
@@ -321,11 +349,45 @@ Class Client
 		return $this;
 	}
 
+	public function getUserAgent() {
+		return $this->userAgent;
+	}
+
+	public function setUserAgent($userAgent) {
+		$this->userAgent = $userAgent;
+		return $this;
+	}
+
+	public function getCookiePersistence() {
+		return $this->cookiePersistence;
+	}
+
+	public function setCookiePersistence($cookiePersistence) {
+		if(is_bool($cookiePersistence) === false) {
+			throw new \InvalidArgumentException('cookiePersistence boolean expected');
+		}
+		$this->cookiePersistence = $cookiePersistence;
+		return $this;
+	}
+
+	protected function getCookieJar() {
+		if(empty($this->url)) {
+			throw new \LogicException('url must be set');
+		}
+
+		$parts_url = parse_url($this->url);
+		return '/tmp/cookies_'.$parts_url['host'];
+	}
+
+	public function resetCookies() {
+		unlink($this->getCookieJar());
+	}
+
 	/**
 	 * Close curl handler and file handler
 	 */
 	public function __destruct() {
-		
+
 		if( !empty($this->fh) ){
 			fclose($this->fh);
 		}

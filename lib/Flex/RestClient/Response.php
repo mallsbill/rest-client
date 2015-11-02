@@ -7,9 +7,10 @@ namespace Flex\RestClient;
  */
 Class Response {
 
-	private $body	= null;
-	private $infos	= null;
-	private $error	= null;
+	protected $body;
+	protected $infos;
+	protected $error;
+	protected $headers;
 
 	/**
 	 *
@@ -17,10 +18,11 @@ Class Response {
 	 * @param array $infos response infos from curl
 	 * @param string $error request error
 	 */
-	public function __construct($body, $infos, $error) {
+	public function __construct($body, $infos, $error, $headers = array()) {
 		$this->body = $body;
 		$this->infos = $infos;
 		$this->error = $error;
+		$this->headers = $headers;
 	}
 
 	/**
@@ -35,7 +37,7 @@ Class Response {
 
 	/**
 	 * get reponse body str
-	 * @return string
+	 * @return string body
 	 */
 	public function getBody() {
 		return $this->body;
@@ -43,10 +45,18 @@ Class Response {
 
 	/**
 	 * get response info
-	 * @return array
+	 * @return array infos
 	 */
 	public function getInfos() {
 		return $this->infos;
+	}
+
+	/**
+	 * Return list of response headers
+	 * @return array headers
+	 */
+	public function getHeaders() {
+		return $this->headers;
 	}
 
 	/**

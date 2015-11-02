@@ -36,6 +36,10 @@ Class Response extends atoum\test {
 		$this->boolean($Response->checkContentType('application/json; charset=utf-8'))->isTrue();
 		$this->boolean($Response->checkContentType('text/plain'))->isFalse();
 
+		$this->array($Response->getHeaders())->isNotEmpty();
+		$headers = $Response->getHeaders();
+		$this->string($headers[0])->isEqualTo('HTTP/1.1 200 OK');
+
 	}
 
 	public function testIsInformation() {

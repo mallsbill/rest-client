@@ -202,6 +202,30 @@ est aut tenetur dolor neque',
 		)->isInstanceOf('\InvalidArgumentException');
 	}
 
+	public function testSetCookiePersistence() {
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+		$this->boolean($Client->getCookiePersistence())->isFalse();
+
+		$Client->setCookiePersistence(true);
+
+		$this->boolean($Client->getCookiePersistence())->isTrue();
+
+		$this->exception(
+			function() use($Client) {
+				$Client->setCookiePersistence('true');
+			}
+		)->isInstanceOf('\InvalidArgumentException');
+	}
+
+	public function testSetUserAgent() {
+		$Client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+		$this->variable($Client->getUserAgent())->isNull();
+
+		$Client->setUserAgent('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
+
+		$this->string($Client->getUserAgent())->isEqualTo('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
+	}
+
 	public function testHeaders() {
 		$Client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
 
