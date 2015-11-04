@@ -88,7 +88,7 @@ Class Client
 		return new Response(curl_exec($this->ch),
 							curl_getinfo($this->ch),
 							curl_error($this->ch),
-							$this->responseHeaders);
+							ResponseHeaders::$headers[(int)$this->ch]);
 
 	}
 
@@ -170,7 +170,7 @@ Class Client
 		curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, $this->sslVerify);
 		curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, $this->sslVerify);
 		curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, $this->followLocation);
-		curl_setopt($this->ch, CURLOPT_HEADERFUNCTION, '\Flex\RestClient\Client::responseHeaders');
+		curl_setopt($this->ch, CURLOPT_HEADERFUNCTION, '\Flex\RestClient\ResponseHeaders::callback');
 
 		if(!empty($this->userAgent)) {
 			curl_setopt($this->ch, CURLOPT_USERAGENT, $this->userAgent);
@@ -181,18 +181,6 @@ Class Client
 			curl_setopt($this->ch, CURLOPT_COOKIEJAR, $cookie_jar);
 			curl_setopt($this->ch, CURLOPT_COOKIEFILE, $cookie_jar);
 		}
-	}
-
-	public function responseHeaders($ch, $headerLine) {
-		$header = str_replace(array(chr(10),chr(13)), '', $headerLine);
-		if(!empty($header)) {
-			$split = explode(':', $header, 2);
-			if(count($split) == 2)
-				$this->responseHeaders[$split[0]] = $split[1];
-			else
-				$this->responseHeaders[] = $split[0];
-		}
-		return strlen($headerLine);
 	}
 
 	protected function initHeaders() {

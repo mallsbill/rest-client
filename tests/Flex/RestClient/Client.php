@@ -54,6 +54,9 @@ nostrum rerum est autem sunt rem eveniet architecto',
 		$this->string($res2->title)->isEqualTo($body['title']);
 		$this->string($res2->body)->isEqualTo($body['body']);
 		$this->integer($res2->userId)->isEqualTo($body['userId']);
+		
+		$headers = $Response->getHeaders();
+		$this->string($headers[0])->isEqualTo('HTTP/1.1 200 OK');
 
 	}
 

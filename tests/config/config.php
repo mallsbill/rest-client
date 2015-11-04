@@ -6,6 +6,7 @@ require_once _BASE.'../lib/Flex/RestClient/Exception.php';
 require_once _BASE.'../lib/Flex/RestClient/AbstractCollection.php';
 require_once _BASE.'../lib/Flex/RestClient/Method.php';
 require_once _BASE.'../lib/Flex/RestClient/MineType.php';
+require_once _BASE.'../lib/Flex/RestClient/ResponseHeaders.php';
 require_once _BASE.'../lib/Flex/RestClient/Response.php';
 require_once _BASE.'../lib/Flex/RestClient/ResponseCollection.php';
 require_once _BASE.'../lib/Flex/RestClient/Client.php';
