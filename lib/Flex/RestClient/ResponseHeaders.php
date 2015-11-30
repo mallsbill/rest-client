@@ -5,7 +5,7 @@ Class ResponseHeaders {
 
 	public static $headers = array();
 
-	public function callback($ch, $headerLine) {
+	public static function callback($ch, $headerLine) {
 		$header = str_replace(array(chr(10),chr(13)), '', $headerLine);
 		if(!empty($header)) {
 			$split = explode(':', $header, 2);
