@@ -22,6 +22,7 @@ Class Client
 
 	protected $headers = array();
 	protected $sslVerify = false;
+	protected $sslVersion = CURL_SSLVERSION_DEFAULT;
 	protected $followLocation = true;
 	protected $cookiePersistence = false;
 	protected $userAgent;
@@ -169,6 +170,7 @@ Class Client
 		curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, $this->sslVerify);
 		curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, $this->sslVerify);
+		curl_setopt($this->ch, CURLOPT_SSLVERSION, $this->sslVersion);
 		curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, $this->followLocation);
 		curl_setopt($this->ch, CURLOPT_HEADERFUNCTION, '\Flex\RestClient\ResponseHeaders::callback');
 
@@ -312,6 +314,15 @@ Class Client
 			throw new \InvalidArgumentException('sslVerify boolean expected');
 		}
 		$this->sslVerify = $sslVerify;
+		return $this;
+	}
+
+	public function getSslVersion() {
+		return $this->sslVersion;
+	}
+
+	public function setSslVersion($sslVersion) {
+		$this->sslVersion = $sslVersion;
 		return $this;
 	}
 

@@ -244,4 +244,19 @@ est aut tenetur dolor neque',
 		
 	}
 
+	public function testSslVersion() {
+		$Client = new TestedClass('https://www.payflex.ch');
+		$this->integer($Client->getSslVersion())->isEqualTo(0);
+		$response = $Client->execute();
+		$this->integer($response->getHttpCode())->isEqualTo(200);
+		var_dump($response);
+
+		$Client = new TestedClass('https://www.payflex.ch');
+		$Client->setSslVersion(6);
+		$this->integer($Client->getSslVersion())->isEqualTo(6);
+		$response = $Client->execute();
+		$this->integer($response->getHttpCode())->isEqualTo(200);
+		var_dump($response);
+	}
+
 }
