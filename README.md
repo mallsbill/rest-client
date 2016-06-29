@@ -18,7 +18,7 @@ Ajouter à votre composer.json, le dépot suivant
 
  et ajouter au require
 
-	"flex/rest-client": "dev-master"
+	"flex/rest-client": "0.*"
 
 
 Exemple d'utilisation
