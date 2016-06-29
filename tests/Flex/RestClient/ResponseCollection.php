@@ -8,6 +8,20 @@ use mageekguy\atoum;
 
 Class ResponseCollection extends atoum\test {
 
+	public function testSetGet() {
+		$response = new \Flex\RestClient\Response('', array(), '');
+
+		$ResponseCollection = new TestedClass();
+		$ResponseCollection->add($response);
+		$ResponseCollection->set('response1', $response);
+		$ResponseCollection['response2'] = $response;
+
+		$this->object($ResponseCollection[0])->isInstanceOf('\\Flex\RestClient\\Response');
+		$this->object($ResponseCollection['response1'])->isInstanceOf('\\Flex\RestClient\\Response');
+		$this->object($ResponseCollection->get('response2'))->isInstanceOf('\\Flex\RestClient\\Response');
+		$this->variable($ResponseCollection['unknow'])->isNull();
+	}
+
 	public function testExceptions() {
 		$ResponseCollection = new TestedClass();
 
