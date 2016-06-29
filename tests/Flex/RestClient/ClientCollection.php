@@ -84,5 +84,28 @@ Class ClientCollection extends atoum\test {
 
 	}
 
+	public function testExceptions() {
+		$ClientCollection = new TestedClass();
+
+		$this->exception(
+			function() use($ClientCollection) {
+				$ClientCollection->add(new \stdClass());
+			}
+		)->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Flex\RestClient\Client');
+
+		$this->exception(
+			function() use($ClientCollection) {
+				$ClientCollection->set('stdclass', new \stdClass());
+			}
+		)->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Flex\RestClient\Client');
+
+		$this->exception(
+			function() use($ClientCollection) {
+			$ClientCollection['stdclass'] = new \stdClass();
+			}
+		)->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Flex\RestClient\Client');
+
+	}
+
 
 }

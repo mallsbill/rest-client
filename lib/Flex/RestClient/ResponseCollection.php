@@ -9,7 +9,10 @@ Class ResponseCollection extends AbstractCollection {
 	 *
 	 * @param \Flex\RestClient\Response $response Response
 	 */
-	public function add(Response $response) {
+	public function add($response) {
+		if($response instanceof Response === false)
+			throw new \InvalidArgumentException('$response must be an instance of \Flex\RestClient\Response');
+
 		parent::add($response);
 	}
 
@@ -19,7 +22,10 @@ Class ResponseCollection extends AbstractCollection {
 	 * @param string|integer $key   The key/index of the element to set.
 	 * @param \Flex\RestClient\Response $response Response
 	 */
-	public function set($key, Response $response) {
+	public function set($key, $response) {
+		if($response instanceof Response === false)
+			throw new \InvalidArgumentException('$response must be an instance of \Flex\RestClient\Response');
+
 		parent::set($key, $response);
 	}
 

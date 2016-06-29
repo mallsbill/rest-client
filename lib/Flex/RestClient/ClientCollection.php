@@ -16,7 +16,10 @@ Class ClientCollection extends AbstractCollection {
 	 * @param string|integer $key   The key/index of the element to set.
 	 * @param \Flex\RestClient\Client $client Client
 	 */
-	public function add(Client $client) {
+	public function add($client) {
+		if($client instanceof Client === false)
+			throw new \InvalidArgumentException('$client must be an instance of \Flex\RestClient\Client');
+
 		parent::add($client);
 	}
 
@@ -26,7 +29,10 @@ Class ClientCollection extends AbstractCollection {
 	 * @param string|integer $key   The key/index of the element to set.
 	 * @param \Flex\RestClient\Client $client Client
 	 */
-	public function set($key, Client $client) {
+	public function set($key, $client) {
+		if($client instanceof Client === false)
+			throw new \InvalidArgumentException('$client must be an instance of \Flex\RestClient\Client');
+
 		parent::set($key, $client);
 	}
 
