@@ -56,7 +56,7 @@ Class Response {
 	 * @return string error
 	 */
 	public function getError() {
-		return $this->error
+		return $this->error;
 	}
 
 	/**
