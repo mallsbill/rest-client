@@ -50,6 +50,14 @@ Class Response {
 	public function getInfos() {
 		return $this->infos;
 	}
+	
+	/**
+	 * get response last error
+	 * @return string error
+	 */
+	public function getError() {
+		return $this->error
+	}
 
 	/**
 	 * Return list of response headers
