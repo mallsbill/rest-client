@@ -3,7 +3,7 @@ namespace Flex\RestClient;
 
 Class ResponseHeaders {
 
-	public static $headers = array();
+	protected static $headers = array();
 
 	public static function callback($ch, $headerLine) {
 		$header = str_replace(array(chr(10),chr(13)), '', $headerLine);
@@ -15,6 +15,13 @@ Class ResponseHeaders {
 				self::$headers[(int)$ch][] = $split[0];
 		}
 		return strlen($headerLine);
+	}
+
+	public static function get($ch) {
+		if(isset(self::$headers[(int)$ch]))
+			return self::$headers[(int)$ch];
+		else
+			return array();
 	}
 
 }

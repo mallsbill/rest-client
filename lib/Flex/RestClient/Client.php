@@ -89,7 +89,7 @@ Class Client
 		return new Response(curl_exec($this->ch),
 							curl_getinfo($this->ch),
 							curl_error($this->ch),
-							ResponseHeaders::$headers[(int)$this->ch]);
+							ResponseHeaders::get($this->ch));
 
 	}
 
