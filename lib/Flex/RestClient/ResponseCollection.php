@@ -46,7 +46,7 @@ Class ResponseCollection extends AbstractCollection {
 	 */
 	public function isSuccessful() {
 		foreach ($this->collection as $response) {
-			if($response->isSuccessfull() === false)
+			if($response->isSuccessful() === false)
 				return false;
 		}
 
