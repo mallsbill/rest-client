@@ -40,4 +40,17 @@ Class ResponseCollection extends AbstractCollection {
 		return parent::get($key);
 	}
 
+	/**
+	 * Is all http requests are successful
+	 * @return boolean true for success, false for fail
+	 */
+	public function isSuccessful() {
+		foreach ($this->collection as $response) {
+			if($response->isSuccessfull() === false)
+				return false;
+		}
+
+		return true;
+	}
+
 }
