@@ -36,6 +36,19 @@ Class Response {
 	}
 
 	/**
+	 * get a simpleXMLElement object from response body
+	 * @param integer $options Libxml options
+	 * @return \SimpleXMLElement
+	 */
+	public function getSimpleXml($options = LIBXML_NONET | LIBXML_ERR_WARNING) {
+		$entity_loader = libxml_disable_entity_loader(true);
+		$simpleXml = new \SimpleXMLElement($this->body, $options);
+		libxml_disable_entity_loader($entity_loader);
+
+		return $simpleXml;
+	}
+
+	/**
 	 * get reponse body str
 	 * @return string body
 	 */
