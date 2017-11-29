@@ -123,17 +123,11 @@ class Client
 	 * Init Put Request
 	 */
 	protected function initPut() {
+		curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 
-		$this->requestLength = strlen($this->requestBody);
-
-		$this->fh = fopen('php://memory', 'rw');
-		fwrite($this->fh, $this->requestBody);
-		rewind($this->fh);
-
-		curl_setopt($this->ch, CURLOPT_INFILE, $this->fh);
-		curl_setopt($this->ch, CURLOPT_INFILESIZE, $this->requestLength);
-		curl_setopt($this->ch, CURLOPT_PUT, true);
-
+		if( !empty($this->requestBody) ){
+			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
+		}
 	}
 
 	/**
@@ -143,7 +137,6 @@ class Client
 		curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 
 		if( !empty($this->requestBody) ){
-			curl_setopt($this->ch, CURLOPT_POST, true);
 			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
 		}
 
