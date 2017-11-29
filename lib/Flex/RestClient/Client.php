@@ -7,7 +7,7 @@ use LogicException;
 /**
  * Send Rest request
  */
-Class Client
+class Client
 {
 
 	// @property ressource $ch Curl Handler
@@ -38,7 +38,7 @@ Class Client
 	 * Contruct RestClient
 	 * @param string $url url to call
 	 * @param string $method http method
-	 * @param various $requestBody array of parameter or string to send
+	 * @param string|array $requestBody array of parameter or string to send
 	 */
 	public function __construct($url = null, $method = Method::GET, $requestBody = null) {
 		$this->url				= $url;
@@ -54,17 +54,17 @@ Class Client
 	public function init() {
 		$this->ch = curl_init();
 
-		$this->buildPostBody();
-
 		switch (strtoupper($this->method))
 		{
 			case Method::GET:
+				$this->buildBody();
 				$this->initGet();
 				break;
 			case Method::POST:
 				$this->initPost();
 				break;
 			case Method::PUT:
+				$this->buildBody();
 				$this->initPut();
 				break;
 			case Method::DELETE:
@@ -97,15 +97,10 @@ Class Client
 	 * Transform array of parameters to string
 	 * @param array $data
 	 */
-	public function buildPostBody($data = null) {
-		$data = ($data !== null) ? $data : $this->requestBody;
-
-		if ( is_array($data) )
-		{
-			$data = http_build_query($data, '', '&');
+	protected function buildBody() {
+		if ( is_array($this->requestBody) ) {
+			$this->requestBody = http_build_query($this->requestBody, '', '&');
 		}
-
-		$this->requestBody = $data;
 	}
 
 	/**
@@ -120,10 +115,8 @@ Class Client
 	 * Init Post Request
 	 */
 	protected function initPost() {
-
-		curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
 		curl_setopt($this->ch, CURLOPT_POST, true);
-
+		curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
 	}
 
 	/**
@@ -150,8 +143,8 @@ Class Client
 		curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 
 		if( !empty($this->requestBody) ){
-			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
 			curl_setopt($this->ch, CURLOPT_POST, true);
+			curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
 		}
 
 	}
