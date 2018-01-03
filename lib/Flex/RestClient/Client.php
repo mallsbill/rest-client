@@ -61,6 +61,7 @@ class Client
 				$this->initGet();
 				break;
 			case Method::POST:
+				$this->buildBody();
 				$this->initPost();
 				break;
 			case Method::PUT:
