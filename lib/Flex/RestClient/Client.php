@@ -100,6 +100,12 @@ class Client
 	 */
 	protected function buildBody() {
 		if ( is_array($this->requestBody) ) {
+			// if there's a file, don't transform to string
+			foreach($this->requestBody as $element) {
+				if($element instanceof \CURLFile)
+					return;
+			}
+
 			$this->requestBody = http_build_query($this->requestBody, '', '&');
 		}
 	}
