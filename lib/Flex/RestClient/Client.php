@@ -372,7 +372,8 @@ class Client
 	}
 
 	public function resetCookies() {
-		unlink($this->getCookieJar());
+		if(file_exists($this->getCookieJar()))
+			unlink($this->getCookieJar());
 	}
 
 	/**
