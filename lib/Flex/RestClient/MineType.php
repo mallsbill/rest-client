@@ -5,7 +5,7 @@ namespace Flex\RestClient;
  * Mine types
  * http://en.wikipedia.org/wiki/Internet_media_type#List_of_common_media_types
  */
-Class MineType {
+class MineType {
 
 	const TEXT       = 'text/plain';
 

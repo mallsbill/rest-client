@@ -6,7 +6,7 @@ require_once realpath(dirname(__FILE__)).'/../../config/config.php';
 use Flex\RestClient\ResponseCollection as TestedClass;
 use mageekguy\atoum;
 
-Class ResponseCollection extends atoum\test {
+class ResponseCollection extends atoum\test {
 
 	public function testSetGet() {
 		$response = new \Flex\RestClient\Response('', array(), '');

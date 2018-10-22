@@ -7,7 +7,7 @@ use Flex\RestClient\Response as TestedClass;
 use Flex\RestClient\Client;
 use mageekguy\atoum;
 
-Class Response extends atoum\test {
+class Response extends atoum\test {
 
 	public function testGetBody(){
 		$body = '{

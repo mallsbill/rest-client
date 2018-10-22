@@ -25,6 +25,7 @@ class Client
 	protected $sslVersion = CURL_SSLVERSION_DEFAULT;
 	protected $followLocation = true;
 	protected $cookiePersistence = false;
+	protected $cookieJarDirectory = '/tmp';
 	protected $userAgent;
 
 	protected $username;
@@ -362,13 +363,26 @@ class Client
 		return $this;
 	}
 
+	public function getCookieJarDirectory() {
+		return $this->cookieJarDirectory;
+	}
+
+	public function setCookieJarDirectory($cookieJarDirectory) {
+		if(is_dir($cookieJarDirectory) === false) {
+			throw new \LogicException($cookieJarDirectory.' is not a valid directory');
+		}
+
+		$this->cookieJarDirectory = $cookieJarDirectory;
+		return $this;
+	}
+
 	protected function getCookieJar() {
 		if(empty($this->url)) {
 			throw new \LogicException('url must be set');
 		}
 
 		$parts_url = parse_url($this->url);
-		return '/tmp/cookies_'.$parts_url['host'];
+		return $this->cookieJarDirectory.'/cookies_'.$parts_url['host'];
 	}
 
 	public function resetCookies() {

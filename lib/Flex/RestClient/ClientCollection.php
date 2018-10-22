@@ -5,7 +5,7 @@ namespace Flex\RestClient;
 /**
  * Send parallel Rest requests
  */
-Class ClientCollection extends AbstractCollection {
+class ClientCollection extends AbstractCollection {
 
 	// @property ressource $mh Curl Multi Handler
 	protected $mh;

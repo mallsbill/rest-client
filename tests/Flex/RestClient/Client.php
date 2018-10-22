@@ -8,7 +8,7 @@ use Flex\RestClient\Method;
 use Flex\RestClient\MineType;
 use	mageekguy\atoum;
 
-Class Client extends atoum\test {
+class Client extends atoum\test {
 
 	public function testPost() {
 
@@ -260,6 +260,21 @@ est aut tenetur dolor neque',
 		$this->integer($client->getSslVersion())->isEqualTo(6);
 		$response = $client->execute();
 		$this->integer($response->getHttpCode())->isEqualTo(200);
+	}
+
+	public function testSetCookieJarDirectory() {
+		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+		$this->string($client->getCookieJarDirectory())->isEqualTo('/tmp');
+
+		$client->setCookieJarDirectory(__DIR__);
+
+		$this->string($client->getCookieJarDirectory())->isEqualTo(__DIR__);
+
+		$this->exception(
+			function() use($client) {
+				$client->setCookieJarDirectory('/bad_directory');
+			}
+		)->isInstanceOf('\LogicException')->hasMessage('/bad_directory is not a valid directory');
 	}
 
 }

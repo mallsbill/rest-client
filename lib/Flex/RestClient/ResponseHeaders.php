@@ -1,7 +1,7 @@
 <?php
 namespace Flex\RestClient;
 
-Class ResponseHeaders {
+class ResponseHeaders {
 
 	protected static $headers = array();
 

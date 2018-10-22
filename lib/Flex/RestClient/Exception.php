@@ -1,6 +1,6 @@
 <?php
 namespace Flex\RestClient;
 
-Class Exception extends \Exception {
+class Exception extends \Exception {
 	
 }

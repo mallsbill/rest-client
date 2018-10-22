@@ -1,7 +1,7 @@
 <?php
 namespace Flex\RestClient;
 
-Class Method {
+class Method {
 
 	const GET = 'GET';
 

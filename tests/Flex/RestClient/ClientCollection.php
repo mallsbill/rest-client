@@ -7,7 +7,7 @@ use Flex\RestClient\Client;
 use Flex\RestClient\ClientCollection as TestedClass;
 use mageekguy\atoum;
 
-Class ClientCollection extends atoum\test {
+class ClientCollection extends atoum\test {
 
 	public function getCollection(){
 		$ClientCollection = new TestedClass();

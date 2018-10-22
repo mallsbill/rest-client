@@ -5,7 +5,7 @@ namespace Flex\RestClient;
  * Rest Client Helper Response
  * @author clement
  */
-Class Response {
+class Response {
 
 	protected $body;
 	protected $infos;
