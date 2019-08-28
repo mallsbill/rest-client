@@ -6,273 +6,284 @@ use Flex\RestClient\Method;
 use Flex\RestClient\MineType;
 use	mageekguy\atoum;
 
-class Client extends atoum\test {
+class Client extends atoum\test
+{
+    public function testPost()
+    {
 
-	public function testPost() {
-
-		// add new post
-		$body = array(
-				'title' => 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
-				'body' =>
+        // add new post
+        $body = array(
+                'title' => 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+                'body' =>
 'quia et suscipit
 suscipit recusandae consequuntur expedita et cum
 reprehenderit molestiae ut ut quas totam
 nostrum rerum est autem sunt rem eveniet architecto',
-				'userId' => 1
-			);
+                'userId' => 1
+            );
 
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/posts', Method::POST, $body );
-		$response = $client->execute();
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/posts', Method::POST, $body);
+        $response = $client->execute();
 
-		$this->object($response)->isInstanceOf('\\Flex\RestClient\\Response');
-		$this->boolean($response->isSuccessful())->isTrue();
+        $this->object($response)->isInstanceOf('\\Flex\RestClient\\Response');
+        $this->boolean($response->isSuccessful())->isTrue();
+    }
 
-	}
-
-	public function testGet() {
-
-		$body = array(
-				'title' => 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
-				'body' =>
+    public function testGet()
+    {
+        $body = array(
+                'title' => 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+                'body' =>
 'quia et suscipit
 suscipit recusandae consequuntur expedita et cum
 reprehenderit molestiae ut ut quas totam
 nostrum rerum est autem sunt rem eveniet architecto',
-				'userId' => 1
-			);
+                'userId' => 1
+            );
 
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1');
-		$response = $client->execute();
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1');
+        $response = $client->execute();
 
-		$this->boolean($response->isSuccessful())->isTrue();
+        $this->boolean($response->isSuccessful())->isTrue();
 
-		$res2 = $response->getJsonDecode();
+        $res2 = $response->getJsonDecode();
 
-		$this->integer($res2->id)->isEqualTo(1);
-		$this->string($res2->title)->isEqualTo($body['title']);
-		$this->string($res2->body)->isEqualTo($body['body']);
-		$this->integer($res2->userId)->isEqualTo($body['userId']);
-		
-		$headers = $response->getHeaders();
-		$this->string($headers[0])->isEqualTo('HTTP/1.1 200 OK');
+        $this->integer($res2->id)->isEqualTo(1);
+        $this->string($res2->title)->isEqualTo($body['title']);
+        $this->string($res2->body)->isEqualTo($body['body']);
+        $this->integer($res2->userId)->isEqualTo($body['userId']);
+        
+        $headers = $response->getHeaders();
+        $this->string($headers[0])->isEqualTo('HTTP/1.1 200 OK');
+    }
 
-	}
-
-	public function testUpdate() {
-		// update
-		$body_update = array(
-				'title' => 'nesciunt quas odio',
-				'body' =>
+    public function testUpdate()
+    {
+        // update
+        $body_update = array(
+                'title' => 'nesciunt quas odio',
+                'body' =>
 'repudiandae veniam quaerat sunt sed
 alias aut fugiat sit autem sed est
 voluptatem omnis possimus esse voluptatibus quis
 est aut tenetur dolor neque',
-				'userId' => 2
-			);
+                'userId' => 2
+            );
 
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/posts/99', Method::PUT, $body_update);
-		$response = $client->execute();
-		$this->boolean($response->isSuccessful())->isTrue();
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/posts/99', Method::PUT, $body_update);
+        $response = $client->execute();
+        $this->boolean($response->isSuccessful())->isTrue();
 
-		$body = $response->getJsonDecode(true);
-		
-		$this->array($body)->hasKey('userId');
-		$this->string($body['userId'])->isEqualTo('2');
-	}
+        $body = $response->getJsonDecode(true);
+        
+        $this->array($body)->hasKey('userId');
+        $this->string($body['userId'])->isEqualTo('2');
+    }
 
-	public function testDelete() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/posts/100', Method::DELETE);
-		$response = $client->execute();
-		$this->boolean($response->isSuccessful())->isTrue();
+    public function testDelete()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/posts/100', Method::DELETE);
+        $response = $client->execute();
+        $this->boolean($response->isSuccessful())->isTrue();
+    }
 
-	}
+    public function testExceptions()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1', 'UNKNOW');
+        $this->exception(
+            function () use ($client) {
+                $client->execute();
+            }
+        )->hasMessage('Current verb (UNKNOW) is an invalid REST method.');
 
-	public function testExceptions(){
+        $client = new TestedClass();
+        $this->exception(
+            function () use ($client) {
+                $client->execute();
+            }
+        )->hasMessage('Url must be set');
+    }
 
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1', 'UNKNOW');
-		$this->exception(
-			function() use($client) {
-				$client->execute();
-			}
-		)->hasMessage('Current verb (UNKNOW) is an invalid REST method.');
+    public function testGetCurlHandler()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
 
-		$client = new TestedClass();
-		$this->exception(
-			function() use($client) {
-				$client->execute();
-			}
-		)->hasMessage('Url must be set');
+        $this->exception(
+            function () use ($client) {
+                $client->getCurlHandler();
+            }
+        )->hasMessage('Curl handler not initialized');
 
-	}
+        $client->init();
 
-	public function testGetCurlHandler(){
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->variable($client->getCurlHandler())->isNotNull();
+    }
 
-		$this->exception(
-			function() use($client) {
-				$client->getCurlHandler();
-			}
-		)->hasMessage('Curl handler not initialized');
+    public function testSetContentType()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $client->setContentType(MineType::TEXT);
 
-		$client->init();
+        $this->string($client->getContentType())->isEqualTo(MineType::TEXT);
+    }
 
-		$this->variable($client->getCurlHandler())->isNotNull();
-	}
+    public function testSetAcceptType()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->string($client->getAcceptType())->isEqualTo(MineType::JSON);
 
-	public function testSetContentType() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$client->setContentType(MineType::TEXT);
+        $client->setAcceptType(MineType::TEXT);
 
-		$this->string($client->getContentType())->isEqualTo(MineType::TEXT);
-	}
+        $this->string($client->getAcceptType())->isEqualTo(MineType::TEXT);
+    }
 
-	public function testSetAcceptType() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$this->string($client->getAcceptType())->isEqualTo(MineType::JSON);
+    public function testSetPassword()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $client->setUsername('username');
+        $client->setPassword('password');
+        $client->init();
 
-		$client->setAcceptType(MineType::TEXT);
+        $this->string($client->getPassword())->isEqualTo('password');
+        $this->string($client->getUsername())->isEqualTo('username');
+    }
 
-		$this->string($client->getAcceptType())->isEqualTo(MineType::TEXT);
-	}
+    public function testSetUrl()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->string($client->getUrl())->isEqualTo('http://jsonplaceholder.typicode.com/users/1');
+        
+        $client->setUrl('http://www.google.fr');
 
-	public function testSetPassword() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$client->setUsername('username');
-		$client->setPassword('password');
-		$client->init();
+        $this->string($client->getUrl())->isEqualTo('http://www.google.fr');
+    }
 
-		$this->string($client->getPassword())->isEqualTo('password');
-		$this->string($client->getUsername())->isEqualTo('username');
-	}
+    public function testSetMethod()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->string($client->getMethod())->isEqualTo(Method::GET);
 
-	public function testSetUrl() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$this->string($client->getUrl())->isEqualTo('http://jsonplaceholder.typicode.com/users/1');
-		
-		$client->setUrl('http://www.google.fr');
+        $client->setMethod(Method::POST);
 
-		$this->string($client->getUrl())->isEqualTo('http://www.google.fr');
-	}
+        $this->string($client->getMethod())->isEqualTo(Method::POST);
+    }
 
-	public function testSetMethod() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$this->string($client->getMethod())->isEqualTo(Method::GET);
+    public function testSetTimeout()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->integer($client->getTimeout())->isEqualTo(5);
 
-		$client->setMethod(Method::POST);
+        $client->setTimeout(10);
 
-		$this->string($client->getMethod())->isEqualTo(Method::POST);
-	}
+        $this->integer($client->getTimeout())->isEqualTo(10);
 
-	public function testSetTimeout() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$this->integer($client->getTimeout())->isEqualTo(5);
+        $this->exception(
+            function () use ($client) {
+                $client->setTimeout('pouet');
+            }
+        )->isInstanceOf('\InvalidArgumentException');
+    }
 
-		$client->setTimeout(10);
+    public function testSetSslVerify()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->boolean($client->getSslVerify())->isFalse();
 
-		$this->integer($client->getTimeout())->isEqualTo(10);
+        $client->setSslVerify(true);
 
-		$this->exception(
-			function() use($client) {
-				$client->setTimeout('pouet');
-			}
-		)->isInstanceOf('\InvalidArgumentException');
-	}
+        $this->boolean($client->getSslVerify())->isTrue();
 
-	public function testSetSslVerify() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$this->boolean($client->getSslVerify())->isFalse();
+        $this->exception(
+            function () use ($client) {
+                $client->setSslVerify('true');
+            }
+        )->isInstanceOf('\InvalidArgumentException');
+    }
 
-		$client->setSslVerify(true);
+    public function testSetFollowLocation()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->boolean($client->getFollowLocation())->isTrue();
 
-		$this->boolean($client->getSslVerify())->isTrue();
+        $client->setFollowLocation(false);
 
-		$this->exception(
-			function() use($client) {
-				$client->setSslVerify('true');
-			}
-		)->isInstanceOf('\InvalidArgumentException');
-	}
+        $this->boolean($client->getFollowLocation())->isFalse();
 
-	public function testSetFollowLocation() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$this->boolean($client->getFollowLocation())->isTrue();
+        $this->exception(
+            function () use ($client) {
+                $client->setFollowLocation('true');
+            }
+        )->isInstanceOf('\InvalidArgumentException');
+    }
 
-		$client->setFollowLocation(false);
+    public function testSetCookiePersistence()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->boolean($client->getCookiePersistence())->isFalse();
 
-		$this->boolean($client->getFollowLocation())->isFalse();
+        $client->setCookiePersistence(true);
 
-		$this->exception(
-			function() use($client) {
-				$client->setFollowLocation('true');
-			}
-		)->isInstanceOf('\InvalidArgumentException');
-	}
+        $this->boolean($client->getCookiePersistence())->isTrue();
 
-	public function testSetCookiePersistence() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$this->boolean($client->getCookiePersistence())->isFalse();
+        $this->exception(
+            function () use ($client) {
+                $client->setCookiePersistence('true');
+            }
+        )->isInstanceOf('\InvalidArgumentException');
+    }
 
-		$client->setCookiePersistence(true);
+    public function testSetUserAgent()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->variable($client->getUserAgent())->isNull();
 
-		$this->boolean($client->getCookiePersistence())->isTrue();
+        $client->setUserAgent('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
 
-		$this->exception(
-			function() use($client) {
-				$client->setCookiePersistence('true');
-			}
-		)->isInstanceOf('\InvalidArgumentException');
-	}
+        $this->string($client->getUserAgent())->isEqualTo('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
+    }
 
-	public function testSetUserAgent() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$this->variable($client->getUserAgent())->isNull();
+    public function testHeaders()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
 
-		$client->setUserAgent('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
+        $this->string($client->getHeader('Accept'))->isEqualTo(MineType::JSON);
+        
+        $client->setHeader('Accept-Language', 'fr-FR');
+        $this->string($client->getHeader('Accept-Language'))->isEqualTo('fr-FR');
 
-		$this->string($client->getUserAgent())->isEqualTo('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36');
-	}
+        $client->setContentType(MineType::TEXT);
+        $this->string($client->getHeader('Content-Type'))->isEqualTo(MineType::TEXT);
 
-	public function testHeaders() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->array($client->getHeaders())->hasKeys(array('Accept','Accept-Language','Content-Type'));
+    }
 
-		$this->string($client->getHeader('Accept'))->isEqualTo(MineType::JSON);
-		
-		$client->setHeader('Accept-Language', 'fr-FR');
-		$this->string($client->getHeader('Accept-Language'))->isEqualTo('fr-FR');
+    public function testSslVersion()
+    {
+        $client = new TestedClass('https://www.payflex.ch');
+        $this->integer($client->getSslVersion())->isEqualTo(0);
+        $response = $client->execute();
+        $this->integer($response->getHttpCode())->isEqualTo(200);
 
-		$client->setContentType(MineType::TEXT);
-		$this->string($client->getHeader('Content-Type'))->isEqualTo(MineType::TEXT);
+        $client = new TestedClass('https://www.payflex.ch');
+        $client->setSslVersion(6);
+        $this->integer($client->getSslVersion())->isEqualTo(6);
+        $response = $client->execute();
+        $this->integer($response->getHttpCode())->isEqualTo(200);
+    }
 
-		$this->array($client->getHeaders())->hasKeys(array('Accept','Accept-Language','Content-Type'));
-		
-	}
+    public function testSetCookieJarDirectory()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
+        $this->string($client->getCookieJarDirectory())->isEqualTo('/tmp');
 
-	public function testSslVersion() {
-		$client = new TestedClass('https://www.payflex.ch');
-		$this->integer($client->getSslVersion())->isEqualTo(0);
-		$response = $client->execute();
-		$this->integer($response->getHttpCode())->isEqualTo(200);
+        $client->setCookieJarDirectory(__DIR__);
 
-		$client = new TestedClass('https://www.payflex.ch');
-		$client->setSslVersion(6);
-		$this->integer($client->getSslVersion())->isEqualTo(6);
-		$response = $client->execute();
-		$this->integer($response->getHttpCode())->isEqualTo(200);
-	}
+        $this->string($client->getCookieJarDirectory())->isEqualTo(__DIR__);
 
-	public function testSetCookieJarDirectory() {
-		$client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
-		$this->string($client->getCookieJarDirectory())->isEqualTo('/tmp');
-
-		$client->setCookieJarDirectory(__DIR__);
-
-		$this->string($client->getCookieJarDirectory())->isEqualTo(__DIR__);
-
-		$this->exception(
-			function() use($client) {
-				$client->setCookieJarDirectory('/bad_directory');
-			}
-		)->isInstanceOf('\LogicException')->hasMessage('/bad_directory is not a valid directory');
-	}
-
+        $this->exception(
+            function () use ($client) {
+                $client->setCookieJarDirectory('/bad_directory');
+            }
+        )->isInstanceOf('\LogicException')->hasMessage('/bad_directory is not a valid directory');
+    }
 }
