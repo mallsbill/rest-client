@@ -1,8 +1,6 @@
 <?php
 namespace Flex\RestClient\tests\units;
 
-require_once realpath(dirname(__FILE__)).'/../../config/config.php';
-
 use Flex\RestClient\Response as TestedClass;
 use Flex\RestClient\Client;
 use mageekguy\atoum;

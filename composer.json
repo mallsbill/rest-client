@@ -3,7 +3,7 @@
     "description": "Rest Client",
     "license": "proprietary",
     "autoload": {
-        "psr-0": {
+        "psr-4": {
             "Flex\\RestClient\\": "lib/"
         }
     },
