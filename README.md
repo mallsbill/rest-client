@@ -100,3 +100,15 @@ Requètes en parallèle
 			// do something
 		}
 	}
+
+Tests unitaires
+---------------
+
+Lancer tout les tests
+
+	composer.phar test
+
+Lancer un test en particulier
+
+	composer.phar atoum -- -f tests/Client.php
+
