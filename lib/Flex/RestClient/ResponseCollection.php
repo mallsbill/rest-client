@@ -53,4 +53,20 @@ class ResponseCollection extends AbstractCollection {
 		return true;
 	}
 
+	/**
+	 * Return infos of all requests
+	 *
+	 * @return array
+	 */
+	public function getInfos()
+	{
+		$infos = [];
+		/* @var $response Response */
+		foreach ($this->collection as $key => $response) {
+			$infos[$key] = $response->getInfos();
+		}
+
+		return $infos;
+	}
+
 }
