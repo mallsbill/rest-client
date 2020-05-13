@@ -175,12 +175,48 @@ class Response
     }
 
     /**
+     * is http code bad request
+     * @return boolean
+     */
+    public function isBadRequest()
+    {
+        return $this->infos['http_code'] == 400;
+    }
+
+    /**
+     * is http code bad authentification
+     * @return boolean
+     */
+    public function isBadAuthentification()
+    {
+        return $this->infos['http_code'] == 401;
+    }
+
+    /**
+     * is http code forbidden
+     * @return boolean
+     */
+    public function isForbidden()
+    {
+        return $this->infos['http_code'] == 403;
+    }
+
+    /**
      * is http code not found
      * @return boolean
      */
     public function isNotFound()
     {
         return $this->infos['http_code'] == 404;
+    }
+
+    /**
+     * is http code not implemented
+     * @return boolean
+     */
+    public function isNotImplemented()
+    {
+        return $this->infos['http_code'] == 501;
     }
 
     /**
