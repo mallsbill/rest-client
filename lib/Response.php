@@ -45,7 +45,7 @@ class Response
     public function getSimpleXml($options = LIBXML_NONET | LIBXML_ERR_WARNING)
     {
         $entity_loader = libxml_disable_entity_loader(true);
-        $simpleXml = new \SimpleXMLElement($this->body, $options);
+        $simpleXml = new \SimpleXMLElement(trim($this->body), $options);
         libxml_disable_entity_loader($entity_loader);
 
         return $simpleXml;
