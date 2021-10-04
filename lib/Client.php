@@ -70,6 +70,10 @@ class Client
                 $this->buildBody();
                 $this->initPut();
                 break;
+            case Method::PATCH:
+                $this->buildBody();
+                $this->initPatch();
+                break;
             case Method::DELETE:
                 $this->initDelete();
                 break;
@@ -140,6 +144,18 @@ class Client
     protected function initPut()
     {
         curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+
+        if (!empty($this->requestBody)) {
+            curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
+        }
+    }
+
+    /**
+     * Init Patch Request
+     */
+    protected function initPatch()
+    {
+        curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
 
         if (!empty($this->requestBody)) {
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $this->requestBody);
