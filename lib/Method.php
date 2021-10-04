@@ -12,4 +12,6 @@ class Method
 
     const PUT = 'PUT';
     const UPDATE = 'PUT';
+
+    const PATCH = 'PATCH';
 }
