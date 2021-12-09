@@ -1,4 +1,5 @@
 <?php
+
 namespace Flex\RestClient\tests\units;
 
 use Flex\RestClient\Client;
@@ -7,6 +8,7 @@ use mageekguy\atoum;
 
 class ClientCollection extends atoum\test
 {
+
     public function getCollection()
     {
         $ClientCollection = new TestedClass();
@@ -49,7 +51,7 @@ class ClientCollection extends atoum\test
     public function testExist()
     {
         $ClientCollection = $this->getCollection();
-        
+
         $this->boolean($ClientCollection->exists(0))->isTrue();
         $ClientCollection->remove(0);
         $this->boolean($ClientCollection->exists(0))->isFalse();
@@ -89,21 +91,21 @@ class ClientCollection extends atoum\test
         $ClientCollection = new TestedClass();
 
         $this->exception(
-            function () use ($ClientCollection) {
-                $ClientCollection->add(new \stdClass());
-            }
+                function () use ($ClientCollection) {
+                    $ClientCollection->add(new \stdClass());
+                }
         )->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Flex\RestClient\Client');
 
         $this->exception(
-            function () use ($ClientCollection) {
-                $ClientCollection->set('stdclass', new \stdClass());
-            }
+                function () use ($ClientCollection) {
+                    $ClientCollection->set('stdclass', new \stdClass());
+                }
         )->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Flex\RestClient\Client');
 
         $this->exception(
-            function () use ($ClientCollection) {
-                $ClientCollection['stdclass'] = new \stdClass();
-            }
+                function () use ($ClientCollection) {
+                    $ClientCollection['stdclass'] = new \stdClass();
+                }
         )->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Flex\RestClient\Client');
     }
 }

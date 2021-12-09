@@ -1,4 +1,5 @@
 <?php
+
 namespace Flex\RestClient;
 
 /**
@@ -7,13 +8,10 @@ namespace Flex\RestClient;
  */
 class MineType
 {
-    const TEXT        = 'text/plain';
 
-    const JSON        = 'application/json';
-
-    const XML         = 'application/xml';
-    
-    const OSTREAM     = 'application/octet-stream';
-
-    const MULTIPART   = 'multipart/form-data';
+    const TEXT = 'text/plain';
+    const JSON = 'application/json';
+    const XML = 'application/xml';
+    const OSTREAM = 'application/octet-stream';
+    const MULTIPART = 'multipart/form-data';
 }

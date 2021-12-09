@@ -14,8 +14,7 @@ class ClientCollection extends AbstractCollection
     /**
      * Sets a Client in the client collection at the specified key/index.
      *
-     * @param string|integer $key   The key/index of the element to set.
-     * @param \Flex\RestClient\Client $client Client
+     * @param object $client Client
      */
     public function add($client)
     {
@@ -29,8 +28,8 @@ class ClientCollection extends AbstractCollection
     /**
      * Sets a Client in the collection at the specified key/index.
      *
-     * @param string|integer $key   The key/index of the element to set.
-     * @param \Flex\RestClient\Client $client Client
+     * @param string|integer $key The key/index of the element to set.
+     * @param object $client Client
      */
     public function set($key, $client)
     {

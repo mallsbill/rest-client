@@ -8,7 +8,7 @@ class ResponseCollection extends AbstractCollection
     /**
      * Sets a Response in the collection at the specified key/index.
      *
-     * @param \Flex\RestClient\Response $response Response
+     * @param object $response Response
      */
     public function add($response)
     {
@@ -23,7 +23,7 @@ class ResponseCollection extends AbstractCollection
      * Sets a Response in the collection at the specified key/index.
      *
      * @param string|integer $key   The key/index of the element to set.
-     * @param \Flex\RestClient\Response $response Response
+     * @param object $response Response
      */
     public function set($key, $response)
     {

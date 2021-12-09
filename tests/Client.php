@@ -1,26 +1,28 @@
 <?php
+
 namespace Flex\RestClient\tests\units;
 
 use Flex\RestClient\Client as TestedClass;
 use Flex\RestClient\Method;
 use Flex\RestClient\MineType;
-use	mageekguy\atoum;
+use mageekguy\atoum;
 
 class Client extends atoum\test
 {
+
     public function testPost()
     {
 
         // add new post
         $body = array(
-                'title' => 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
-                'body' =>
-'quia et suscipit
+            'title' => 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+            'body' =>
+            'quia et suscipit
 suscipit recusandae consequuntur expedita et cum
 reprehenderit molestiae ut ut quas totam
 nostrum rerum est autem sunt rem eveniet architecto',
-                'userId' => 1
-            );
+            'userId' => 1
+        );
 
         $client = new TestedClass('http://jsonplaceholder.typicode.com/posts', Method::POST, $body);
         $response = $client->execute();
@@ -32,14 +34,14 @@ nostrum rerum est autem sunt rem eveniet architecto',
     public function testGet()
     {
         $body = array(
-                'title' => 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
-                'body' =>
-'quia et suscipit
+            'title' => 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit',
+            'body' =>
+            'quia et suscipit
 suscipit recusandae consequuntur expedita et cum
 reprehenderit molestiae ut ut quas totam
 nostrum rerum est autem sunt rem eveniet architecto',
-                'userId' => 1
-            );
+            'userId' => 1
+        );
 
         $client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1');
         $response = $client->execute();
@@ -52,7 +54,7 @@ nostrum rerum est autem sunt rem eveniet architecto',
         $this->string($res2->title)->isEqualTo($body['title']);
         $this->string($res2->body)->isEqualTo($body['body']);
         $this->integer($res2->userId)->isEqualTo($body['userId']);
-        
+
         $headers = $response->getHeaders();
         $this->string($headers[0])->isEqualTo('HTTP/1.1 200 OK');
     }
@@ -61,21 +63,21 @@ nostrum rerum est autem sunt rem eveniet architecto',
     {
         // update
         $body_update = array(
-                'title' => 'nesciunt quas odio',
-                'body' =>
-'repudiandae veniam quaerat sunt sed
+            'title' => 'nesciunt quas odio',
+            'body' =>
+            'repudiandae veniam quaerat sunt sed
 alias aut fugiat sit autem sed est
 voluptatem omnis possimus esse voluptatibus quis
 est aut tenetur dolor neque',
-                'userId' => 2
-            );
+            'userId' => 2
+        );
 
         $client = new TestedClass('http://jsonplaceholder.typicode.com/posts/99', Method::PUT, $body_update);
         $response = $client->execute();
         $this->boolean($response->isSuccessful())->isTrue();
 
         $body = $response->getJsonDecode(true);
-        
+
         $this->array($body)->hasKey('userId');
         $this->string($body['userId'])->isEqualTo('2');
     }
@@ -91,16 +93,16 @@ est aut tenetur dolor neque',
     {
         $client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1', 'UNKNOW');
         $this->exception(
-            function () use ($client) {
-                $client->execute();
-            }
+                function () use ($client) {
+                    $client->execute();
+                }
         )->hasMessage('Current verb (UNKNOW) is an invalid REST method.');
 
         $client = new TestedClass();
         $this->exception(
-            function () use ($client) {
-                $client->execute();
-            }
+                function () use ($client) {
+                    $client->execute();
+                }
         )->hasMessage('Url must be set');
     }
 
@@ -109,9 +111,9 @@ est aut tenetur dolor neque',
         $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
 
         $this->exception(
-            function () use ($client) {
-                $client->getCurlHandler();
-            }
+                function () use ($client) {
+                    $client->getCurlHandler();
+                }
         )->hasMessage('Curl handler not initialized');
 
         $client->init();
@@ -152,7 +154,7 @@ est aut tenetur dolor neque',
     {
         $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
         $this->string($client->getUrl())->isEqualTo('http://jsonplaceholder.typicode.com/users/1');
-        
+
         $client->setUrl('http://www.google.fr');
 
         $this->string($client->getUrl())->isEqualTo('http://www.google.fr');
@@ -178,9 +180,9 @@ est aut tenetur dolor neque',
         $this->integer($client->getTimeout())->isEqualTo(10);
 
         $this->exception(
-            function () use ($client) {
-                $client->setTimeout('pouet');
-            }
+                function () use ($client) {
+                    $client->setTimeout('pouet');
+                }
         )->isInstanceOf('\InvalidArgumentException');
     }
 
@@ -194,9 +196,9 @@ est aut tenetur dolor neque',
         $this->boolean($client->getSslVerify())->isTrue();
 
         $this->exception(
-            function () use ($client) {
-                $client->setSslVerify('true');
-            }
+                function () use ($client) {
+                    $client->setSslVerify('true');
+                }
         )->isInstanceOf('\InvalidArgumentException');
     }
 
@@ -210,9 +212,9 @@ est aut tenetur dolor neque',
         $this->boolean($client->getFollowLocation())->isFalse();
 
         $this->exception(
-            function () use ($client) {
-                $client->setFollowLocation('true');
-            }
+                function () use ($client) {
+                    $client->setFollowLocation('true');
+                }
         )->isInstanceOf('\InvalidArgumentException');
     }
 
@@ -226,9 +228,9 @@ est aut tenetur dolor neque',
         $this->boolean($client->getCookiePersistence())->isTrue();
 
         $this->exception(
-            function () use ($client) {
-                $client->setCookiePersistence('true');
-            }
+                function () use ($client) {
+                    $client->setCookiePersistence('true');
+                }
         )->isInstanceOf('\InvalidArgumentException');
     }
 
@@ -247,14 +249,14 @@ est aut tenetur dolor neque',
         $client = new TestedClass('http://jsonplaceholder.typicode.com/users/1');
 
         $this->string($client->getHeader('Accept'))->isEqualTo(MineType::JSON);
-        
+
         $client->setHeader('Accept-Language', 'fr-FR');
         $this->string($client->getHeader('Accept-Language'))->isEqualTo('fr-FR');
 
         $client->setContentType(MineType::TEXT);
         $this->string($client->getHeader('Content-Type'))->isEqualTo(MineType::TEXT);
 
-        $this->array($client->getHeaders())->hasKeys(array('Accept','Accept-Language','Content-Type'));
+        $this->array($client->getHeaders())->hasKeys(array('Accept', 'Accept-Language', 'Content-Type'));
     }
 
     public function testSslVersion()
@@ -281,9 +283,9 @@ est aut tenetur dolor neque',
         $this->string($client->getCookieJarDirectory())->isEqualTo(__DIR__);
 
         $this->exception(
-            function () use ($client) {
-                $client->setCookieJarDirectory('/bad_directory');
-            }
+                function () use ($client) {
+                    $client->setCookieJarDirectory('/bad_directory');
+                }
         )->isInstanceOf('\LogicException')->hasMessage('/bad_directory is not a valid directory');
     }
 }

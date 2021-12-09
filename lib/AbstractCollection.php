@@ -9,13 +9,13 @@ use IteratorAggregate;
 
 abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAggregate
 {
+
     protected $collection = array();
 
     /**
      * Sets an element at the end of the collection
      *
-     * @param string|integer $key   The key/index of the element to set.
-     * @param mixed          $element element
+     * @param mixed $element element
      */
     public function add($element)
     {
@@ -25,8 +25,8 @@ abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAgg
     /**
      * Sets an element in the collection at the specified key/index.
      *
-     * @param string|integer $key   The key/index of the element to set.
-     * @param mixed          $element element
+     * @param string|integer $key The key/index of the element to set.
+     * @param mixed $element element
      */
     public function set($key, $element)
     {
@@ -150,7 +150,7 @@ abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAgg
      */
     public function offsetSet($offset, $value)
     {
-        return $this->set($offset, $value);
+        $this->set($offset, $value);
     }
 
     /**
@@ -160,7 +160,7 @@ abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAgg
      */
     public function offsetUnset($offset)
     {
-        return $this->remove($offset);
+        $this->remove($offset);
     }
 
     /**

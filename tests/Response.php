@@ -1,4 +1,5 @@
 <?php
+
 namespace Flex\RestClient\tests\units;
 
 use Flex\RestClient\Response as TestedClass;
@@ -7,6 +8,7 @@ use mageekguy\atoum;
 
 class Response extends atoum\test
 {
+
     public function testGetBody()
     {
         $body = '{
@@ -37,101 +39,101 @@ class Response extends atoum\test
 
         $this->string($response->getBody())->isNotNull();
         $this->object($response->getJsonDecode())->isInstanceOf('\\stdClass');
-        $this->array($response->getJsonDecode(true))->hasKeys(array('id','name'));
+        $this->array($response->getJsonDecode(true))->hasKeys(array('id', 'name'));
     }
 
     public function testGetInfos()
     {
         $infos = array(
             'url' => 'http://jsonplaceholder.typicode.com/users/1',
-            'content_type'=>'application/json; charset=utf-8',
+            'content_type' => 'application/json; charset=utf-8',
             'http_code' => 200
         );
 
         $response = new TestedClass('', $infos, array());
-        $this->array($response->getInfos())->hasKeys(array('url','content_type','http_code'));
+        $this->array($response->getInfos())->hasKeys(array('url', 'content_type', 'http_code'));
     }
 
     public function testGetHeaders()
     {
         $headers = array(
             0 => "HTTP/1.1 200 OK",
-            'Content-Type'=> " application/json; charset=utf-8",
+            'Content-Type' => " application/json; charset=utf-8",
             'Content-Length' => " 509"
         );
 
         $response = new TestedClass('', array(), array(), $headers);
         $this->array($response->getHeaders())->isNotEmpty();
-        $this->array($response->getHeaders())->hasKeys(array(0,'Content-Type','Content-Length'));
+        $this->array($response->getHeaders())->hasKeys(array(0, 'Content-Type', 'Content-Length'));
     }
 
     public function testGetContentType()
     {
-        $response = new TestedClass('', array('content_type'=>'application/json; charset=utf-8'), '');
+        $response = new TestedClass('', array('content_type' => 'application/json; charset=utf-8'), '');
         $this->string($response->getContentType())->isEqualTo('application/json; charset=utf-8');
     }
 
     public function testCheckContentType()
     {
-        $response = new TestedClass('', array('content_type'=>'application/json; charset=utf-8'), '');
+        $response = new TestedClass('', array('content_type' => 'application/json; charset=utf-8'), '');
         $this->boolean($response->checkContentType('application/json; charset=utf-8'))->isTrue();
         $this->boolean($response->checkContentType('text/plain'))->isFalse();
     }
 
     public function testIsInformation()
     {
-        $response = new TestedClass('', array('http_code'=>101), '');
+        $response = new TestedClass('', array('http_code' => 101), '');
         $this->boolean($response->isInformation())->isTrue();
     }
 
     public function testIsSuccessful()
     {
-        $response = new TestedClass('', array('http_code'=>201), '');
+        $response = new TestedClass('', array('http_code' => 201), '');
         $this->boolean($response->isSuccessful())->isTrue();
 
-        $response = new TestedClass('', array('http_code'=>300), '');
+        $response = new TestedClass('', array('http_code' => 300), '');
         $this->boolean($response->isSuccessful())->isFalse();
     }
 
     public function testIsRedirection()
     {
-        $response = new TestedClass('', array('http_code'=>301), '');
+        $response = new TestedClass('', array('http_code' => 301), '');
         $this->boolean($response->isRedirection())->isTrue();
     }
 
     public function testIsClientError()
     {
-        $response = new TestedClass('', array('http_code'=>400), '');
+        $response = new TestedClass('', array('http_code' => 400), '');
         $this->boolean($response->isClientError())->isTrue();
     }
 
     public function testIsServerError()
     {
-        $response = new TestedClass('', array('http_code'=>500), '');
+        $response = new TestedClass('', array('http_code' => 500), '');
         $this->boolean($response->isServerError())->isTrue();
     }
 
     public function testIsOk()
     {
-        $response = new TestedClass('', array('http_code'=>400), '');
+        $response = new TestedClass('', array('http_code' => 400), '');
         $this->boolean($response->isOk())->isFalse();
     }
 
     public function testIsCreated()
     {
-        $response = new TestedClass('', array('http_code'=>201), '');
+        $response = new TestedClass('', array('http_code' => 201), '');
         $this->boolean($response->isCreated())->isTrue();
     }
 
     public function testIsAccepted()
     {
-        $response = new TestedClass('', array('http_code'=>202), '');
+        $response = new TestedClass('', array('http_code' => 202), '');
         $this->boolean($response->isAccepted())->isTrue();
     }
 
     public function testIsNotFound()
     {
-        $response = new TestedClass('', array('http_code'=>404), '');
+        $response = new TestedClass('', array('http_code' => 404), '');
         $this->boolean($response->isNotFound())->isTrue();
     }
 

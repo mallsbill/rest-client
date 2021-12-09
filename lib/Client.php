@@ -1,4 +1,5 @@
 <?php
+
 namespace Flex\RestClient;
 
 use InvalidArgumentException;
@@ -14,12 +15,10 @@ class Client
     protected $ch;
     // @property ressource $fh File Handler
     protected $fh;
-
     protected $url;
     protected $method;
     protected $requestBody;
     protected $requestLength = 0;
-
     protected $headers = array();
     protected $sslVerify = false;
     protected $sslVersion = CURL_SSLVERSION_DEFAULT;
@@ -27,12 +26,9 @@ class Client
     protected $cookiePersistence = false;
     protected $cookieJarDirectory = '/tmp';
     protected $userAgent;
-
     protected $username;
     protected $password;
-
     protected $timeout = 5;
-
     protected $responseHeaders = array();
 
     /**
@@ -43,10 +39,10 @@ class Client
      */
     public function __construct($url = null, $method = Method::GET, $requestBody = null)
     {
-        $this->url				= $url;
-        $this->method			= $method;
-        $this->requestBody		= $requestBody;
-        $this->headers['Accept']= MineType::JSON;
+        $this->url = $url;
+        $this->method = $method;
+        $this->requestBody = $requestBody;
+        $this->headers['Accept'] = MineType::JSON;
     }
 
     /**
@@ -88,7 +84,7 @@ class Client
 
     /**
      * Execute the request
-     * Return Flex\RestClient\Response
+     * @return Response
      */
     public function execute()
     {
@@ -103,7 +99,6 @@ class Client
 
     /**
      * Transform array of parameters to string
-     * @param array $data
      */
     protected function buildBody()
     {
@@ -125,7 +120,7 @@ class Client
     protected function initGet()
     {
         if (!empty($this->requestBody)) {
-            $this->url .= (strpos($this->url, '?') === false) ? '?'.$this->requestBody : '&'.$this->requestBody;
+            $this->url .= (strpos($this->url, '?') === false) ? '?' . $this->requestBody : '&' . $this->requestBody;
         }
     }
 
@@ -208,7 +203,7 @@ class Client
         $headers = array();
 
         foreach ($this->headers as $name => $value) {
-            $headers[] = $name.': '.$value;
+            $headers[] = $name . ': ' . $value;
         }
 
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
@@ -238,7 +233,7 @@ class Client
 
     /**
      * Return curl ressource, work only from MultiClient
-     * @return ressource Curl
+     * @return resource Curl
      * @throws LogicException
      */
     public function getCurlHandler()
@@ -427,7 +422,7 @@ class Client
     public function setCookieJarDirectory($cookieJarDirectory)
     {
         if (is_dir($cookieJarDirectory) === false) {
-            throw new \LogicException($cookieJarDirectory.' is not a valid directory');
+            throw new \LogicException($cookieJarDirectory . ' is not a valid directory');
         }
 
         $this->cookieJarDirectory = $cookieJarDirectory;
@@ -441,7 +436,7 @@ class Client
         }
 
         $parts_url = parse_url($this->url);
-        return $this->cookieJarDirectory.'/cookies_'.$parts_url['host'];
+        return $this->cookieJarDirectory . '/cookies_' . $parts_url['host'];
     }
 
     public function resetCookies()

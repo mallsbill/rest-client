@@ -16,7 +16,9 @@
         "php": ">=7.1"
     },
     "require-dev": {
-        "atoum/atoum": "^3.0.0"
+        "atoum/atoum": "^3.0.0",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "phpstan/phpstan": "^1.2"
     },
     "scripts": {
         "test": "atoum -d tests",

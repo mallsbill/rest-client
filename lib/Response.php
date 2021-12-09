@@ -1,4 +1,5 @@
 <?php
+
 namespace Flex\RestClient;
 
 /**
@@ -7,6 +8,7 @@ namespace Flex\RestClient;
  */
 class Response
 {
+
     protected $body;
     protected $infos;
     protected $error;
@@ -28,9 +30,9 @@ class Response
 
     /**
      * get a json object from response body
-     * @param array[string]mixed $assoc force associative array for response
-     * @throws JSonException
-     * @return stdClass|array
+     * @param bool $assoc force associative array for response
+     * @throws \JSonException
+     * @return \stdClass|array
      */
     public function getJsonDecode($assoc = false)
     {
@@ -68,7 +70,7 @@ class Response
     {
         return $this->infos;
     }
-    
+
     /**
      * get response last error
      * @return string error
@@ -89,7 +91,7 @@ class Response
 
     /**
      * Is http response information
-     * @return boolean true for information, false for everything else
+     * @return bool true for information, false for everything else
      */
     public function isInformation()
     {
@@ -101,7 +103,7 @@ class Response
 
     /**
      * Is http request successful
-     * @return boolean true for success, false for fail
+     * @return bool true for success, false for fail
      */
     public function isSuccessful()
     {
@@ -113,7 +115,7 @@ class Response
 
     /**
      * is http response redirection
-     * @return true for redirection, false for everything else
+     * @return bool true for redirection, false for everything else
      */
     public function isRedirection()
     {
@@ -125,7 +127,7 @@ class Response
 
     /**
      * is http reponse client error
-     * @return boolean true for client error, false for everything else
+     * @return bool true for client error, false for everything else
      */
     public function isClientError()
     {
@@ -137,7 +139,7 @@ class Response
 
     /**
      * is http reponse server errors
-     * @return boolean true for server error, false for everything else
+     * @return bool true for server error, false for everything else
      */
     public function isServerError()
     {
@@ -149,7 +151,7 @@ class Response
 
     /**
      * is http code ok
-     * @return boolean
+     * @return bool
      */
     public function isOk()
     {
@@ -158,7 +160,7 @@ class Response
 
     /**
      * is http code created
-     * @return boolean
+     * @return bool
      */
     public function isCreated()
     {
@@ -167,7 +169,7 @@ class Response
 
     /**
      * is http code created
-     * @return boolean
+     * @return bool
      */
     public function isAccepted()
     {
@@ -176,7 +178,7 @@ class Response
 
     /**
      * is http code bad request
-     * @return boolean
+     * @return bool
      */
     public function isBadRequest()
     {
@@ -185,7 +187,7 @@ class Response
 
     /**
      * is http code bad authentification
-     * @return boolean
+     * @return bool
      */
     public function isBadAuthentification()
     {
@@ -194,7 +196,7 @@ class Response
 
     /**
      * is http code forbidden
-     * @return boolean
+     * @return bool
      */
     public function isForbidden()
     {
@@ -203,7 +205,7 @@ class Response
 
     /**
      * is http code not found
-     * @return boolean
+     * @return bool
      */
     public function isNotFound()
     {
@@ -212,7 +214,7 @@ class Response
 
     /**
      * is http code not implemented
-     * @return boolean
+     * @return bool
      */
     public function isNotImplemented()
     {
@@ -221,7 +223,7 @@ class Response
 
     /**
      * get http result code
-     * @return number
+     * @return int
      */
     public function getHttpCode()
     {
@@ -230,7 +232,7 @@ class Response
 
     /**
      * get http content type reponse header
-     * @return type
+     * @return string
      */
     public function getContentType()
     {
@@ -239,8 +241,8 @@ class Response
 
     /**
      * check content type reponse header
-     * @param type $ContentType content type to check
-     * @return boolean true if content type is the same, false if not
+     * @param string $ContentType content type to check
+     * @return bool true if content type is the same, false if not
      */
     public function checkContentType($ContentType)
     {
