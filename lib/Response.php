@@ -8,7 +8,6 @@ namespace Flex\RestClient;
  */
 class Response
 {
-
     protected $body;
     protected $infos;
     protected $error;

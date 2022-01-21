@@ -4,7 +4,6 @@ namespace Flex\RestClient;
 
 class ResponseHeaders
 {
-
     protected static $headers = array();
 
     public static function callback($ch, $headerLine)

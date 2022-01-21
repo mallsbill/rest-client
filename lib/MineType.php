@@ -8,7 +8,6 @@ namespace Flex\RestClient;
  */
 class MineType
 {
-
     const TEXT = 'text/plain';
     const JSON = 'application/json';
     const XML = 'application/xml';

@@ -10,7 +10,6 @@ use LogicException;
  */
 class Client
 {
-
     // @property ressource $ch Curl Handler
     protected $ch;
     // @property ressource $fh File Handler

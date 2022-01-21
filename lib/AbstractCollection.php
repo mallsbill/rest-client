@@ -9,7 +9,6 @@ use IteratorAggregate;
 
 abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAggregate
 {
-
     protected $collection = array();
 
     /**

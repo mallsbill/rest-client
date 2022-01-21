@@ -7,7 +7,6 @@ namespace Flex\RestClient;
  */
 class ClientCollection extends AbstractCollection
 {
-
     // @property ressource $mh Curl Multi Handler
     protected $mh;
 

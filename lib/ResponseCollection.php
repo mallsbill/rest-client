@@ -4,7 +4,6 @@ namespace Flex\RestClient;
 
 class ResponseCollection extends AbstractCollection
 {
-
     /**
      * Sets a Response in the collection at the specified key/index.
      *
