@@ -3,9 +3,9 @@
 namespace Flex\RestClient\tests\units;
 
 use Flex\RestClient\ResponseCollection as TestedClass;
-use mageekguy\atoum;
+use atoum;
 
-class ResponseCollection extends atoum\test
+class ResponseCollection extends atoum
 {
 
     public function testSetGet()

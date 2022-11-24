@@ -4,9 +4,9 @@ namespace Flex\RestClient\tests\units;
 
 use Flex\RestClient\Response as TestedClass;
 use Flex\RestClient\Client;
-use mageekguy\atoum;
+use atoum;
 
-class Response extends atoum\test
+class Response extends atoum
 {
 
     public function testGetBody()

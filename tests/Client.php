@@ -5,9 +5,9 @@ namespace Flex\RestClient\tests\units;
 use Flex\RestClient\Client as TestedClass;
 use Flex\RestClient\Method;
 use Flex\RestClient\MineType;
-use mageekguy\atoum;
+use atoum;
 
-class Client extends atoum\test
+class Client extends atoum
 {
 
     public function testPost()
@@ -287,5 +287,17 @@ est aut tenetur dolor neque',
                     $client->setCookieJarDirectory('/bad_directory');
                 }
         )->isInstanceOf('\LogicException')->hasMessage('/bad_directory is not a valid directory');
+    }
+
+    public function testDebug()
+    {
+        $client = new TestedClass('http://jsonplaceholder.typicode.com/posts/1');
+        $client->enableDebug();
+        $response = $client->execute();
+
+        $this->boolean($response->isSuccessful())->isTrue();
+
+        $debug = $response->getDebug();
+        $this->string($debug)->contains('Connected to jsonplaceholder.typicode.com');
     }
 }

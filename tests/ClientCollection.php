@@ -4,9 +4,9 @@ namespace Flex\RestClient\tests\units;
 
 use Flex\RestClient\Client;
 use Flex\RestClient\ClientCollection as TestedClass;
-use mageekguy\atoum;
+use atoum;
 
-class ClientCollection extends atoum\test
+class ClientCollection extends atoum
 {
 
     public function getCollection()

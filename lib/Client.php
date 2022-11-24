@@ -29,6 +29,8 @@ class Client
     protected $password;
     protected $timeout = 5;
     protected $responseHeaders = array();
+    protected $debug = false;
+    protected $debugFile;
 
     /**
      * Contruct RestClient
@@ -87,12 +89,16 @@ class Client
      */
     public function execute()
     {
+        if ($this->debug === true) {
+            $this->initDebug();
+        }
         $this->init();
         return new Response(
             curl_exec($this->ch),
             curl_getinfo($this->ch),
             curl_error($this->ch),
-            ResponseHeaders::get($this->ch)
+            ResponseHeaders::get($this->ch),
+            $this->debug === true ? $this->closeDebug() : null
         );
     }
 
@@ -194,6 +200,11 @@ class Client
             $cookie_jar = $this->getCookieJar();
             curl_setopt($this->ch, CURLOPT_COOKIEJAR, $cookie_jar);
             curl_setopt($this->ch, CURLOPT_COOKIEFILE, $cookie_jar);
+        }
+
+        if ($this->debug === true) {
+            curl_setopt($this->ch, CURLOPT_STDERR, $this->debugFile);
+            curl_setopt($this->ch, CURLOPT_VERBOSE, true);
         }
     }
 
@@ -443,6 +454,24 @@ class Client
         if (file_exists($this->getCookieJar())) {
             unlink($this->getCookieJar());
         }
+    }
+
+    public function enableDebug()
+    {
+        $this->debug = true;
+    }
+
+    protected function initDebug()
+    {
+        $this->debugFile = tmpfile();
+    }
+
+    protected function closeDebug()
+    {
+        fseek($this->debugFile, 0);
+        $content = fread($this->debugFile, 2048);
+        fclose($this->debugFile);
+        return $content;
     }
 
     /**

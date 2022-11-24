@@ -12,6 +12,7 @@ class Response
     protected $infos;
     protected $error;
     protected $headers;
+    protected $debug;
 
     /**
      *
@@ -19,12 +20,13 @@ class Response
      * @param array $infos response infos from curl
      * @param string $error request error
      */
-    public function __construct($body, $infos, $error, $headers = array())
+    public function __construct($body, $infos, $error, $headers = array(), $debug = null)
     {
         $this->body = $body;
         $this->infos = $infos;
         $this->error = $error;
         $this->headers = $headers;
+        $this->debug = $debug;
     }
 
     /**
@@ -249,5 +251,10 @@ class Response
             return true;
         }
         return false;
+    }
+
+    public function getDebug()
+    {
+        return $this->debug;
     }
 }
