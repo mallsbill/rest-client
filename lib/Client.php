@@ -236,7 +236,7 @@ class Client
      */
     protected function checkCurlHandler()
     {
-        if (is_resource($this->ch) != 'curl') {
+        if (is_resource($this->ch) === false) {
             throw new LogicException('Curl handler not initialized');
         }
     }

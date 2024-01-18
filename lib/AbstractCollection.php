@@ -127,7 +127,7 @@ abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAgg
      *
      * {@inheritDoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->exists($offset);
     }
@@ -137,6 +137,7 @@ abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAgg
      *
      * {@inheritDoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -147,7 +148,7 @@ abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAgg
      *
      * {@inheritDoc}
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->set($offset, $value);
     }
@@ -157,7 +158,7 @@ abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAgg
      *
      * {@inheritDoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->remove($offset);
     }
@@ -167,7 +168,7 @@ abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAgg
      *
      * {@inheritDoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->collection);
     }
@@ -175,7 +176,7 @@ abstract class AbstractCollection implements ArrayAccess, Countable, IteratorAgg
     /**
      * Required by interface IteratorAggregate.
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new ArrayIterator($this->collection);
     }
