@@ -236,7 +236,7 @@ class Client
      */
     protected function checkCurlHandler()
     {
-        if (is_resource($this->ch) === false) {
+        if ($this->ch instanceof \CurlHandle === false) {
             throw new LogicException('Curl handler not initialized');
         }
     }
