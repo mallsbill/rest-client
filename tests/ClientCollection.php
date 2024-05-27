@@ -1,9 +1,9 @@
 <?php
 
-namespace Flex\RestClient\tests\units;
+namespace Pephpit\RestClient\tests\units;
 
-use Flex\RestClient\Client;
-use Flex\RestClient\ClientCollection as TestedClass;
+use Pephpit\RestClient\Client;
+use Pephpit\RestClient\ClientCollection as TestedClass;
 use atoum;
 
 class ClientCollection extends atoum
@@ -24,9 +24,9 @@ class ClientCollection extends atoum
     {
         $ClientCollection = $this->getCollection();
 
-        $this->object($ClientCollection[0])->isInstanceOf('\\Flex\RestClient\\Client');
-        $this->object($ClientCollection['comments'])->isInstanceOf('\\Flex\RestClient\\Client');
-        $this->object($ClientCollection->get('users'))->isInstanceOf('\\Flex\RestClient\\Client');
+        $this->object($ClientCollection[0])->isInstanceOf('\\Pephpit\RestClient\\Client');
+        $this->object($ClientCollection['comments'])->isInstanceOf('\\Pephpit\RestClient\\Client');
+        $this->object($ClientCollection->get('users'))->isInstanceOf('\\Pephpit\RestClient\\Client');
         $this->variable($ClientCollection['unknow'])->isNull();
     }
 
@@ -66,7 +66,7 @@ class ClientCollection extends atoum
         $ClientCollection = $this->getCollection();
 
         foreach ($ClientCollection as $key => $Client) {
-            $this->object($Client)->isInstanceOf('\\Flex\RestClient\\Client');
+            $this->object($Client)->isInstanceOf('\\Pephpit\RestClient\\Client');
         }
     }
 
@@ -77,10 +77,10 @@ class ClientCollection extends atoum
         $ResponseCollection = $ClientCollection->execute();
 
         $this->integer(count($ResponseCollection))->isEqualTo(3);
-        $this->object($ResponseCollection)->isInstanceOf('\\Flex\RestClient\\ResponseCollection');
-        $this->object($ResponseCollection[0])->isInstanceOf('\\Flex\RestClient\\Response');
-        $this->object($ResponseCollection['comments'])->isInstanceOf('\\Flex\RestClient\\Response');
-        $this->object($ResponseCollection['users'])->isInstanceOf('\\Flex\RestClient\\Response');
+        $this->object($ResponseCollection)->isInstanceOf('\\Pephpit\RestClient\\ResponseCollection');
+        $this->object($ResponseCollection[0])->isInstanceOf('\\Pephpit\RestClient\\Response');
+        $this->object($ResponseCollection['comments'])->isInstanceOf('\\Pephpit\RestClient\\Response');
+        $this->object($ResponseCollection['users'])->isInstanceOf('\\Pephpit\RestClient\\Response');
         $this->boolean($ResponseCollection[0]->isSuccessful())->isTrue();
         $this->boolean($ResponseCollection['comments']->isSuccessful())->isTrue();
         $this->boolean($ResponseCollection['users']->isSuccessful())->isTrue();
@@ -94,18 +94,18 @@ class ClientCollection extends atoum
                 function () use ($ClientCollection) {
                     $ClientCollection->add(new \stdClass());
                 }
-        )->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Flex\RestClient\Client');
+        )->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Pephpit\RestClient\Client');
 
         $this->exception(
                 function () use ($ClientCollection) {
                     $ClientCollection->set('stdclass', new \stdClass());
                 }
-        )->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Flex\RestClient\Client');
+        )->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Pephpit\RestClient\Client');
 
         $this->exception(
                 function () use ($ClientCollection) {
                     $ClientCollection['stdclass'] = new \stdClass();
                 }
-        )->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Flex\RestClient\Client');
+        )->isInstanceOf('\\InvalidArgumentException')->hasMessage('$client must be an instance of \Pephpit\RestClient\Client');
     }
 }

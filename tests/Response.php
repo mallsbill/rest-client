@@ -1,9 +1,9 @@
 <?php
 
-namespace Flex\RestClient\tests\units;
+namespace Pephpit\RestClient\tests\units;
 
-use Flex\RestClient\Response as TestedClass;
-use Flex\RestClient\Client;
+use Pephpit\RestClient\Response as TestedClass;
+use Pephpit\RestClient\Client;
 use atoum;
 
 class Response extends atoum

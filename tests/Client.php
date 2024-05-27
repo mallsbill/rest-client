@@ -1,10 +1,10 @@
 <?php
 
-namespace Flex\RestClient\tests\units;
+namespace Pephpit\RestClient\tests\units;
 
-use Flex\RestClient\Client as TestedClass;
-use Flex\RestClient\Method;
-use Flex\RestClient\MineType;
+use Pephpit\RestClient\Client as TestedClass;
+use Pephpit\RestClient\Method;
+use Pephpit\RestClient\MineType;
 use atoum;
 
 class Client extends atoum
@@ -27,7 +27,7 @@ nostrum rerum est autem sunt rem eveniet architecto',
         $client = new TestedClass('http://jsonplaceholder.typicode.com/posts', Method::POST, $body);
         $response = $client->execute();
 
-        $this->object($response)->isInstanceOf('\\Flex\RestClient\\Response');
+        $this->object($response)->isInstanceOf('\\Pephpit\RestClient\\Response');
         $this->boolean($response->isSuccessful())->isTrue();
     }
 

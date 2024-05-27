@@ -1,6 +1,6 @@
 <?php
 
-namespace Flex\RestClient;
+namespace Pephpit\RestClient;
 
 use InvalidArgumentException;
 use LogicException;
@@ -190,7 +190,7 @@ class Client
         curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, $this->sslVerify);
         curl_setopt($this->ch, CURLOPT_SSLVERSION, $this->sslVersion);
         curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, $this->followLocation);
-        curl_setopt($this->ch, CURLOPT_HEADERFUNCTION, '\Flex\RestClient\ResponseHeaders::callback');
+        curl_setopt($this->ch, CURLOPT_HEADERFUNCTION, '\Pephpit\RestClient\ResponseHeaders::callback');
 
         if (!empty($this->userAgent)) {
             curl_setopt($this->ch, CURLOPT_USERAGENT, $this->userAgent);

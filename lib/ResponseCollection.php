@@ -1,6 +1,6 @@
 <?php
 
-namespace Flex\RestClient;
+namespace Pephpit\RestClient;
 
 class ResponseCollection extends AbstractCollection
 {
@@ -12,7 +12,7 @@ class ResponseCollection extends AbstractCollection
     public function add($response)
     {
         if ($response instanceof Response === false) {
-            throw new \InvalidArgumentException('$response must be an instance of \Flex\RestClient\Response');
+            throw new \InvalidArgumentException('$response must be an instance of \Pephpit\RestClient\Response');
         }
 
         parent::add($response);
@@ -27,7 +27,7 @@ class ResponseCollection extends AbstractCollection
     public function set($key, $response)
     {
         if ($response instanceof Response === false) {
-            throw new \InvalidArgumentException('$response must be an instance of \Flex\RestClient\Response');
+            throw new \InvalidArgumentException('$response must be an instance of \Pephpit\RestClient\Response');
         }
 
         parent::set($key, $response);
@@ -38,7 +38,7 @@ class ResponseCollection extends AbstractCollection
      *
      * @param string|integer $key The key/index of the element to retrieve.
      *
-     * @return \Flex\RestClient\Response
+     * @return \Pephpit\RestClient\Response
      */
     public function get($key)
     {

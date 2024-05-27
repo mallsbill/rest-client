@@ -1,19 +1,19 @@
 {
-    "name": "flex/rest-client",
+    "name": "pephpit/rest-client",
     "description": "Rest Client",
-    "license": "proprietary",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Flex\\RestClient\\": "lib/"
+            "Pephpit\\RestClient\\": "lib/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Flex\\RestClient\\tests\\units\\": "tests/"
+            "Pephpit\\RestClient\\tests\\units\\": "tests/"
         }
     },
     "require": {
-        "php": ">=7.4"
+        "php": "^8.1"
     },
     "require-dev": {
         "atoum/atoum": "^4.1",

@@ -1,6 +1,6 @@
 <?php
 
-namespace Flex\RestClient;
+namespace Pephpit\RestClient;
 
 use ArrayAccess;
 use ArrayIterator;

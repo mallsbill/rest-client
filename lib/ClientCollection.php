@@ -1,6 +1,6 @@
 <?php
 
-namespace Flex\RestClient;
+namespace Pephpit\RestClient;
 
 /**
  * Send parallel Rest requests
@@ -18,7 +18,7 @@ class ClientCollection extends AbstractCollection
     public function add($client)
     {
         if ($client instanceof Client === false) {
-            throw new \InvalidArgumentException('$client must be an instance of \Flex\RestClient\Client');
+            throw new \InvalidArgumentException('$client must be an instance of \Pephpit\RestClient\Client');
         }
 
         parent::add($client);
@@ -33,7 +33,7 @@ class ClientCollection extends AbstractCollection
     public function set($key, $client)
     {
         if ($client instanceof Client === false) {
-            throw new \InvalidArgumentException('$client must be an instance of \Flex\RestClient\Client');
+            throw new \InvalidArgumentException('$client must be an instance of \Pephpit\RestClient\Client');
         }
 
         parent::set($key, $client);
@@ -44,7 +44,7 @@ class ClientCollection extends AbstractCollection
      *
      * @param string|integer $key The key/index of the element to retrieve.
      *
-     * @return \Flex\RestClient\Client
+     * @return \Pephpit\RestClient\Client
      */
     public function get($key)
     {
@@ -66,7 +66,7 @@ class ClientCollection extends AbstractCollection
 
     /**
      * Execute requests
-     * @return \Flex\RestClient\ResponseCollection
+     * @return \Pephpit\RestClient\ResponseCollection
      */
     public function execute()
     {
