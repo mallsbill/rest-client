@@ -11,14 +11,14 @@ Ajouter à votre composer.json, le dépot suivant
 
 	"repositories": [
         {
-            "type": "composer",
-            "url": "http://packagist.flex-multimedia.dev/"
+            "type": "git",
+            "url": "https://github.com/mallsbill/rest-client.git"
         }
     ]
 
  et ajouter au require
 
-	"flex/rest-client": "1.*"
+	composer require pephpit/rest-client
 
 
 Exemple d'utilisation
@@ -106,9 +106,9 @@ Tests unitaires
 
 Lancer tout les tests
 
-	composer.phar test
+	composer test
 
 Lancer un test en particulier
 
-	composer.phar atoum -- -f tests/Client.php
+	composer atoum -- -f tests/Client.php
 
