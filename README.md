@@ -1,4 +1,4 @@
-Flex \ RestClient
+Pephpit \ RestClient
 ============
 
 Gère les méthodes http GET, POST (creation), PUT (mise à jour) et DELETE
@@ -26,77 +26,81 @@ Exemple d'utilisation
 
 Récupérer une ressource
 
-	use Flex\RestClient;
+	use Pephpit\RestClient\Client;
 
-	$Client = new RestClient\Client('http://monapi/ressources/1');
-	$Response = $Client->execute();
+	$client = new Client('http://monapi/ressources/1');
+	$response = $client->execute();
 
-	if($Response->isOk()){
-		$ressource = $Response->getJsonDecode();
+	if($response->isOk()){
+		$ressource = $response->getJsonDecode();
 	}
 
 Ajouter une ressource
 
-	use Flex\RestClient;
+	use Pephpit\RestClient\Client;
+    use Pephpit\RestClient\Method;
 
 	$body = array( 'name' => 'ma ressource' );
 
-	$Client = new RestClient\Client('http://monapi/ressources', RestClient\Method::POST, $body );
-	$Response = $Client->execute();
+	$client = new Client('http://monapi/ressources', Method::POST, $body );
+	$response = $client->execute();
 
-	if($Response->isCreated()){
-		$id = $Response->getBody();
+	if($response->isCreated()){
+		$id = $response->getBody();
 	}
 
 Mettre à jour une ressource
 
-	use Flex\RestClient;
+	use Pephpit\RestClient\Client;
+    use Pephpit\RestClient\Method;
 
 	$body = array( 'name' => 'nouveau nom' );
 
-	$Client = new RestClient\Client('http://monapi/ressources/1', RestClient\Method::PUT, $body );
-	$Response = $Client->execute();
+	$client = new Client('http://monapi/ressources/1', Method::PUT, $body );
+	$response = $client->execute();
 
-	if($Response->isSuccessful()){
-		$id = $Response->getBody();
+	if($response->isSuccessful()){
+		$id = $response->getBody();
 	}
 
 Supprimer une ressource
 
-	use Flex\RestClient;
+	use Pephpit\RestClient\Client;
+    use Pephpit\RestClient\Method;
 
-	$Client = new RestClient\Client('http://monapi/ressources/1', RestClient\Method::DELETE);
-	$Response = $Client->execute();
+	$client = new Client('http://monapi/ressources/1', Method::DELETE);
+	$response = $client->execute();
 
-	if($Response->isSuccessful()){
+	if($response->isSuccessful()){
 		// delete ok
 	}
 
 Requètes en parallèle
 
-	use Flex\RestClient;
+    use Pephpit\RestClient\Client;	
+    use Pephpit\RestClient\ClientCollection;
 
-	$ClientCollection = new RestClient\ClientCollection();
+	$clientCollection = new RestClient\ClientCollection();
 	// ajoute la suite de la collection
-	$ClientCollection->add(new RestClient\Client('http://monapi/ressources/1');
+	$clientCollection->add(new RestClient\Client('http://monapi/ressources/1');
 	// ajoute en définissant la clé
-	$ClientCollection->set('res2', new RestClient\Client('http://monapi/ressources/2');
+	$clientCollection->set('res2', new RestClient\Client('http://monapi/ressources/2');
 	// ajoute en définissant la clé, utilise offsetSet d'ArrayAccess
-	$ClientCollection['res42'] = new RestClient\Client('http://monapi/ressources/42');
+	$clientCollection['res42'] = new RestClient\Client('http://monapi/ressources/42');
 
 	// on exécute les requètes
-	$ResponseCollection = $ClientCollection->execute();
+	$responseCollection = $clientCollection->execute();
 
 	// on récupère le retour de la requète ajouté avec add (index 0)
-	$body = $ResponseCollection->get(0)->getBody();
+	$body = $responseCollection->get(0)->getBody();
 	// on récupère le retour de la requète res2 grâce à offsetGet d'ArrayAccess
-	$body2 = $ResponseCollection['res2']->getBody();
+	$body2 = $responseCollection['res2']->getBody();
 	// on récupère le retour de la requète res42
-	$body = $ResponseCollection->get('res42')->getBody();
+	$body = $responseCollection->get('res42')->getBody();
 
 	// on peut aussi boucler sur la collection
-	foreach($ResponseCollection as $Response){
-		if($Response->isSuccessful()){
+	foreach($responseCollection as $response){
+		if($response->isSuccessful()){
 			// do something
 		}
 	}
