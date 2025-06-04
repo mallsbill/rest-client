@@ -1,0 +1,55 @@
+stages:
+  - deploy
+
+# Job pour publier le package dans le GitLab Package Registry
+publish_php_package:
+  stage: deploy
+  image: alpine:latest # Utilisation d'une image légère
+  rules:
+    # Exécuter ce job uniquement lorsque_un tag Git est poussé
+    # Cela garantit que seules les versions taguées sont publiées
+    - if: $CI_COMMIT_TAG
+  script:
+    - echo "Préparation de la publication du package version ${CI_COMMIT_TAG}..."
+
+    # Vérification de la présence du fichier composer.json
+    - |
+      if [ ! -f composer.json ]; then
+        echo "ERREUR: Le fichier composer.json est introuvable à la racine du projet."
+        echo "Assurez-vous que votre package PHP est correctement configuré."
+        exit 1
+      fi
+
+    # Création d'une archive ZIP du package.
+    # Exclut les fichiers et dossiers non nécessaires (comme .git, le CI file, etc.).
+    # Le nom 'package.zip' est arbitraire pour l'upload, GitLab s'appuie sur
+    # le 'composer.json' et le tag pour les métadonnées.
+    - zip -r package.zip . -x ".git/*" ".gitlab-ci.yml" "package.zip"
+
+    - echo "Archive package.zip créée."
+    - echo "Publication du package sur le GitLab Package Registry..."
+
+    # Upload de l'archive vers le Package Registry de GitLab.
+    # GitLab utilise le nom du package défini dans composer.json et la version à partir du tag Git.
+    # ${CI_JOB_TOKEN} est un token temporaire généré par GitLab CI/CD avec les droits nécessaires.
+    # ${CI_API_V4_URL} est l'URL de l'API GitLab (ex: https://gitlab.com/api/v4).
+    # ${CI_PROJECT_ID} est l'ID de votre projet GitLab.
+    # ${CI_COMMIT_TAG} est le tag Git qui a déclenché ce pipeline.
+    - |
+      RESPONSE_CODE=$(curl --silent --show-error --output /dev/stderr --write-out "%{http_code}" \
+           --header "JOB-TOKEN: ${CI_JOB_TOKEN}" \
+           --upload-file package.zip \
+           "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/composer?tag=${CI_COMMIT_TAG}")
+
+    - |
+      if [ "${RESPONSE_CODE}" -ge 200 ] && [ "${RESPONSE_CODE}" -lt 300 ]; then
+        echo "Package ${CI_COMMIT_TAG} publié avec succès (Code HTTP: ${RESPONSE_CODE})."
+      else
+        echo "ERREUR: Échec de la publication du package (Code HTTP: ${RESPONSE_CODE})."
+        echo "Vérifiez les logs du job et les permissions du CI_JOB_TOKEN pour le Package Registry."
+        exit 1
+      fi
+  artifacts:
+    # Optionnel: conserve l'archive packagée comme un artefact du job pour inspection
+    paths:
+      - package.zip
